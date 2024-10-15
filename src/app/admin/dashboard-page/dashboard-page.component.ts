@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { ProductService } from 'src/app/shared/product.service';
 
 @Component({
   selector: 'app-dashboard-page',
@@ -7,9 +9,39 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DashboardPageComponent implements OnInit {
 
-  constructor() { }
+  products = [];
+  productSubscription: Subscription;
+  deleteSubscription: Subscription;
+
+  constructor(
+    private productService: ProductService
+  ) { }
 
   ngOnInit() {
+    this.productSubscription = this.productService
+      .getAllProducts()
+      .subscribe(products => {
+        console.log(products);
+        
+        this.products = products;
+      });
   }
 
+  delete(productId) {
+    this.deleteSubscription = this.productService
+      .deleteProduct(productId)
+      .subscribe(() => {
+        this.products = this.products.filter(product => product.id !== productId);
+      });
+  }
+
+  ngOnDestroy() {
+    if (this.productSubscription) {
+      this.productSubscription.unsubscribe();
+    }
+
+    if (this.deleteSubscription) {
+      this.deleteSubscription.unsubscribe();
+    }
+  }
 }

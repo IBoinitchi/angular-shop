@@ -11,10 +11,10 @@ import { ProductService } from 'src/app/shared/product.service';
 export class AddPageComponent implements OnInit {
 
   form: FormGroup;
-  submitted = false;
+  isSubmit = false;
 
   constructor(
-    private productServ: ProductService,
+    private productService: ProductService,
     private router: Router
   ) { }
 
@@ -33,7 +33,7 @@ export class AddPageComponent implements OnInit {
       return;
     }
 
-    this.submitted = true;
+    this.isSubmit = true;
 
     const product = {
       type: this.form.value.type,
@@ -45,10 +45,10 @@ export class AddPageComponent implements OnInit {
     };
 
     console.log(this.form)
-    this.productServ.create(product).subscribe( res => {
+    this.productService.createProduct(product).subscribe( res => {
       // console.log(res);
       this.form.reset();
-      this.submitted = false;
+      this.isSubmit = false;
       this.router.navigate(['/']); 
     });
   }

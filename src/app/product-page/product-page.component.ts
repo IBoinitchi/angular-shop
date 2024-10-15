@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { ProductService } from '../shared/product.service';
+import { ActivatedRoute } from '@angular/router';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-product-page',
@@ -7,9 +10,20 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ProductPageComponent implements OnInit {
 
-  constructor() { }
+  product;
+
+  constructor(
+    private productService: ProductService,
+    private router: ActivatedRoute
+  ) { }
 
   ngOnInit() {
+    this.product = this.router.params
+      .pipe(
+        switchMap(params => {
+          return this.productService.getProduct(params.id);
+        })
+      )
   }
 
 }
