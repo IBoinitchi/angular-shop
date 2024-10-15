@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ProductService } from '../shared/product.service';
 import { ActivatedRoute } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
+import { Product } from '../shared/interfaces';
 
 @Component({
   selector: 'app-product-page',
@@ -26,4 +27,7 @@ export class ProductPageComponent implements OnInit {
       )
   }
 
+  addProduct(product: Product) {
+    this.productService.addProduct(product);
+  }
 }

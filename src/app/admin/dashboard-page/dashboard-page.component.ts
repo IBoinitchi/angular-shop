@@ -12,6 +12,7 @@ export class DashboardPageComponent implements OnInit {
   products = [];
   productSubscription: Subscription;
   deleteSubscription: Subscription;
+  productName = '';
 
   constructor(
     private productService: ProductService

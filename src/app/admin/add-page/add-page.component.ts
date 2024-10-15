@@ -11,7 +11,7 @@ import { ProductService } from 'src/app/shared/product.service';
 export class AddPageComponent implements OnInit {
 
   form: FormGroup;
-  isSubmit = false;
+  isSubmit: Boolean = false;
 
   constructor(
     private productService: ProductService,
@@ -49,7 +49,7 @@ export class AddPageComponent implements OnInit {
       // console.log(res);
       this.form.reset();
       this.isSubmit = false;
-      this.router.navigate(['/']); 
+      this.router.navigate(['/admin', 'dashboard']); 
     });
   }
 
