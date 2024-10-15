@@ -24,21 +24,21 @@ export class OrderService {
       );
   }
 
-  // getAllProducts() {
-  //   return this.http.get(`${environment.fbDbUrl}/products.json`)
-  //     .pipe(
-  //       map(response => {
-  //         return Object.keys(response)
-  //           .map(key => ({
-  //             ...response[key],
-  //             id: key,
-  //             date: new Date(response[key].date)
-  //           }));
-  //       })
-  //     );
-  // }
+  getAllOrders() {
+    return this.http.get(`${environment.fbDbUrl}/orders.json`)
+      .pipe(
+        map(response => {
+          return Object.keys(response)
+            .map(key => ({
+              ...response[key],
+              id: key,
+              date: new Date(response[key].date)
+            }));
+        })
+      );
+  }
 
-  // deleteProduct(productId) {
-  //   return this.http.delete(`${environment.fbDbUrl}/products/${productId}.json`);
-  // }
+  deleteOrder(orderId) {
+    return this.http.delete(`${environment.fbDbUrl}/orders/${orderId}.json`);
+  }
 }

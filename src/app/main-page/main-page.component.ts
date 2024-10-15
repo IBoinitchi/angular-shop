@@ -9,6 +9,7 @@ import { ProductService } from '../shared/product.service';
 export class MainPageComponent implements OnInit {
 
   products;
+  productType
 
   constructor(
     private productService: ProductService
@@ -18,4 +19,7 @@ export class MainPageComponent implements OnInit {
     this.products = this.productService.getAllProducts();
   }
 
+  getType() {
+    return this.productService.type;
+  }
 }
