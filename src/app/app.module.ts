@@ -26,11 +26,11 @@ import { AuthInterceptor } from './shared/auth.interseptor';
     QuillModule.forRoot()
   ],
   providers: [
-    // {
-    //   provide: HTTP_INTERCEPTORS,
-    //   multi: true,
-    //   useClass: AuthInterceptor
-    // }
+    {
+      provide: HTTP_INTERCEPTORS,
+      multi: true,
+      useClass: AuthInterceptor
+    }
   ],
   bootstrap: [AppComponent]
 })

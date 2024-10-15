@@ -40,13 +40,13 @@
                   "with": "src/environments/environment.dev.ts"
                 }
               ],
-              "optimization": true,
+              "optimization": false,
               "outputHashing": "all",
               "sourceMap": true,
               "extractCss": true,
               "namedChunks": true,
               "aot": true,
-              "extractLicenses": true,
+              "extractLicenses": false,
               "vendorChunk": true,
               "buildOptimizer": false
             },
