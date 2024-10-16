@@ -12,10 +12,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Use Node.js 16.13
+      - name: Use Node.js 18.19.1
         uses: actions/setup-node@v1
         with:
-          node-version: 16.13    
+          node-version: 18.19.1   
       - name: OpenSSL
         run: export NODE_OPTIONS=--openssl-legacy-provider
       - name: Install dependencies
