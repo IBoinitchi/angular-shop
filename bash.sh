@@ -1,5 +1,8 @@
 #!/bin/bash
 
+echo $ENV_API_KEY
+echo $ENV_FB_DB_URL
+
 # Display the current date and time
 echo "Current date and time: $(date)"
 
