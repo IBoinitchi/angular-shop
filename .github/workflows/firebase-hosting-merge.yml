@@ -17,3 +17,12 @@ jobs:
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_AG404_2F02D }}
           channelId: live
           projectId: ag404-2f02d
+
+      - name: Use Node.js 16.13
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16.13    
+      - name: Install dependencies
+        run: npm install
+      - name: Build
+        run: npm run build -- --prod
