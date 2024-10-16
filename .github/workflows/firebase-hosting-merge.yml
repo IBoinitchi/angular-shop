@@ -23,14 +23,14 @@ jobs:
           ENV_API_KEY: ${{ secrets.ENV_API_KEY }}
           ENV_FB_DB_URL: ${{ secrets.ENV_FB_DB_URL }}
         run: bash bash.sh
-      # - name: Install dependencies
-      #   run: npm install
-      # - name: Build
-      #   run: npm run build -- --prod
+      - name: Install dependencies
+        run: npm install
+      - name: Build
+        run: npm run build -- --prod
 
-      # - uses: FirebaseExtended/action-hosting-deploy@v0
-      #   with:
-      #     repoToken: ${{ secrets.GITHUB_TOKEN }}
-      #     firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_AG404_2F02D }}
-      #     channelId: live
-      #     projectId: ag404-2f02d
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_AG404_2F02D }}
+          channelId: live
+          projectId: ag404-2f02d
