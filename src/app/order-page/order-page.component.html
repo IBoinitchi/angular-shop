@@ -1,15 +1,15 @@
-<div class="container" *ngIf="cartProducts.length > 0; else empty">
+<div class="container" *ngIf="orderProducts.length > 0; else empty">
     <h2 class="text-center">Your order</h2>
 
     <table>
         <tbody>
-            <tr *ngFor="let cartProduct of cartProducts; let i = index">
-                <td>{{ cartProduct.type }}</td>
-                <td>{{ cartProduct.title }}</td>
+            <tr *ngFor="let orderProduct of orderProducts; let i = index">
+                <td>{{ orderProduct.type }}</td>
+                <td>{{ orderProduct.title }}</td>
                 <td>
-                    <button class="btn btn-danger" (click)="deleteOrder(cartProduct)">Delete</button>
+                    <button class="btn btn-danger" (click)="deleteOrder(orderProduct)">Delete</button>
                 </td>
-                <td>{{ cartProduct.price }}</td>
+                <td>{{ orderProduct.price }}</td>
             </tr>
         </tbody>
     </table>

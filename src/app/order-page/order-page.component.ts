@@ -5,13 +5,13 @@ import { OrderService } from '../shared/order.service';
 import { Product } from '../shared/interfaces';
 
 @Component({
-  selector: 'app-cart-page',
-  templateUrl: './cart-page.component.html',
-  styleUrls: ['./cart-page.component.scss']
+  selector: 'app-order-page',
+  templateUrl: './order-page.component.html',
+  styleUrls: ['./order-page.component.scss']
 })
-export class CartPageComponent implements OnInit {
+export class OrderPageComponent implements OnInit {
 
-  cartProducts = [];
+  orderProducts = [];
   totalPrice = 0;
   form: FormGroup;
   isSubmit: Boolean = false;
@@ -23,9 +23,9 @@ export class CartPageComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.cartProducts = this.productService.cartProducts;
-    for(let i = 0; i < this.cartProducts.length; i++) {
-      this.totalPrice += +this.cartProducts[i].price;
+    this.orderProducts = this.productService.orderProducts;
+    for(let i = 0; i < this.orderProducts.length; i++) {
+      this.totalPrice += +this.orderProducts[i].price;
     }
 
     this.form = new FormGroup({
@@ -48,7 +48,7 @@ export class CartPageComponent implements OnInit {
       phone: this.form.value.phone,
       address: this.form.value.address,
       payment: this.form.value.payment,
-      orders: this.cartProducts,
+      orders: this.orderProducts,
       price: this.totalPrice,
       date: new Date()
     };
@@ -62,6 +62,6 @@ export class CartPageComponent implements OnInit {
 
   deleteOrder(product: Product) {
     this.totalPrice -= + product.price;
-    this.cartProducts.splice(this.cartProducts.indexOf(product), 1);
+    this.orderProducts.splice(this.orderProducts.indexOf(product), 1);
   }
 }

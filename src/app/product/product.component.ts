@@ -19,6 +19,6 @@ export class ProductComponent implements OnInit {
   }
 
   addProduct(product: Product) {
-    this.productService.addProduct(product);
+    this.productService.addProductToOrder(product);
   }
 }
