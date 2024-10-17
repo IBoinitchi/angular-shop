@@ -17,9 +17,6 @@ jobs:
         with:
           node-version: 18.19.1   
 
-      - name: OpenSSL
-        run: export NODE_OPTIONS=--openssl-legacy-provider
-
       - name: Run Bash script
         env: 
           ENV_API_KEY: ${{ secrets.ENV_API_KEY }}
@@ -27,7 +24,7 @@ jobs:
         run: bash bash.sh
 
       - name: Install dependencies
-        run: npm install
+        run: npm install --force
 
       - name: Build
         run: npm run build -- --prod
