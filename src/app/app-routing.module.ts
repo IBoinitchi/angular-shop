@@ -13,11 +13,6 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: '/',
-        pathMatch: 'full'
-      },
-      {
-        path: '',
         component: MainPageComponent,
       },
       {
@@ -27,13 +22,18 @@ const routes: Routes = [
       {
         path: 'cart',
         component: CartPageComponent
-      }
+      },
     ]
   },
   {
     path: 'admin',
     loadChildren: './admin/admin.module#AdminModule'
-  }
+  },
+  {
+    path: '**',
+    redirectTo: '/',
+    pathMatch: 'full'
+  },
 ];
 
 @NgModule({

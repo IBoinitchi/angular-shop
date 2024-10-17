@@ -25,7 +25,7 @@ import { SearchPipe } from "../shared/search.pipe";
         children: [
           {
             path: '',
-            redirectTo: '/admin/login',
+            redirectTo: 'dashboard',
             pathMatch: 'full'
           },
           {
