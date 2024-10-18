@@ -3,24 +3,24 @@ import { ProductService } from '../shared/product.service';
 import { Product } from '../shared/interfaces';
 
 @Component({
-  selector: 'app-main-page',
-  templateUrl: './main-page.component.html',
-  styleUrls: ['./main-page.component.scss']
+	selector: 'app-main-page',
+	templateUrl: './main-page.component.html',
+	styleUrls: ['./main-page.component.scss']
 })
 export class MainPageComponent implements OnInit {
 
-  products;
-  productType: String = '';
+	products;
+	productType: String = '';
 
-  constructor(
-    private productService: ProductService
-  ) { }
+	constructor(
+		private productService: ProductService
+	) { }
 
-  ngOnInit() {
-    this.products = this.productService.getAllProducts();
-  }
+	ngOnInit() {
+		this.products = this.productService.getAllProducts();
+	}
 
-  getType() {
-    return this.productService.type;
-  }
+	getType() {
+		return this.productService.type;
+	}
 }

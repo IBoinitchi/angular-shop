@@ -3,33 +3,33 @@ import { Router } from '@angular/router';
 import { ProductService } from '../product.service';
 
 @Component({
-  selector: 'app-main-layout',
-  templateUrl: './main-layout.component.html',
-  styleUrls: ['./main-layout.component.scss']
+	selector: 'app-main-layout',
+	templateUrl: './main-layout.component.html',
+	styleUrls: ['./main-layout.component.scss']
 })
 export class MainLayoutComponent implements OnInit {
 
-  type = 'Phone';
+	type = 'Phone';
 
-  constructor(
-    private router: Router,
-    private productService: ProductService
-  ) { }
+	constructor(
+		private router: Router,
+		private productService: ProductService
+	) { }
 
-  ngOnInit() {
-  }
+	ngOnInit() {
+	}
 
-  setType(type = '') {
-    this.type = type;
+	setType(type = '') {
+		this.type = type;
 
-    if (this.type !== 'Order') {
-      this.router.navigate(['/'], {
-        queryParams: {
-          type: this.type
-        }
-      });
+		if (this.type !== 'Order') {
+			this.router.navigate(['/'], {
+				queryParams: {
+					type: this.type
+				}
+			});
 
-      this.productService.setType(this.type);
-    }
-  }
+			this.productService.setType(this.type);
+		}
+	}
 }

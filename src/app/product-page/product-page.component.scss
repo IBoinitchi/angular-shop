@@ -1,19 +1,19 @@
 .product {
-  .header {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-  }
+	.header {
+		display: flex;
+		justify-content: flex-end;
+		align-items: center;
+	}
 
-  h2 {
-    margin-bottom: .5rem;
-  }
+	h2 {
+		margin-bottom: .5rem;
+	}
 
-  .flex {
-    display: flex;
-  }
+	.flex {
+		display: flex;
+	}
 
-  .item {
-    width: 50%;
-  }
+	.item {
+		width: 50%;
+	}
 }

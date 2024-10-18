@@ -1,23 +1,21 @@
 <nav class="navbar bg-dark">
-  <h2>Online Shop</h2>
-  <ul>
-    <li routerLinkActive="active">
-      <a (click)="setType('Phone')">Phone</a>
-    </li>
-    <li routerLinkActive="active">
-      <a (click)="setType('Tablet')">Tablet</a>
-    </li>
-    <li routerLinkActive="active">
-      <a (click)="setType('Laptop')">Laptop</a>
-    </li>
-    <li routerLinkActive="active">
-      <a (click)="setType('Order')" routerLink="order">Order</a>
-    </li>
-  </ul>
+	<h2>Online Shop</h2>
+	<ul>
+		<li routerLinkActive="active">
+			<a (click)="setType('Phone')">Phone</a>
+		</li>
+		<li routerLinkActive="active">
+			<a (click)="setType('Tablet')">Tablet</a>
+		</li>
+		<li routerLinkActive="active">
+			<a (click)="setType('Laptop')">Laptop</a>
+		</li>
+		<li routerLinkActive="active">
+			<a (click)="setType('Order')" routerLink="order">Order</a>
+		</li>
+	</ul>
 </nav>
 
 <div class="container">
-  <router-outlet></router-outlet>
+	<router-outlet></router-outlet>
 </div>
-
-

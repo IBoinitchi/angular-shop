@@ -3,22 +3,22 @@ import { Product } from '../shared/interfaces';
 import { ProductService } from '../shared/product.service';
 
 @Component({
-  selector: 'app-product',
-  templateUrl: './product.component.html',
-  styleUrls: ['./product.component.scss']
+	selector: 'app-product',
+	templateUrl: './product.component.html',
+	styleUrls: ['./product.component.scss']
 })
 export class ProductComponent implements OnInit {
 
-  @Input() product
+	@Input() product
 
-  constructor(
-    private productService: ProductService
-  ) { }
+	constructor(
+		private productService: ProductService
+	) { }
 
-  ngOnInit() {
-  }
+	ngOnInit() {
+	}
 
-  addProduct(product: Product) {
-    this.productService.addProductToOrder(product);
-  }
+	addProduct(product: Product) {
+		this.productService.addProductToOrder(product);
+	}
 }
