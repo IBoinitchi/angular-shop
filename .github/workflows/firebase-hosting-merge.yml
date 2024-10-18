@@ -15,7 +15,7 @@ jobs:
       - name: Use Node.js 18.20.4
         uses: actions/setup-node@v1
         with:
-          node-version: 18.20.4 
+          node-version: '18.20.4'
 
       - name: Run Bash script
         env: 
