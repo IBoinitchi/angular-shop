@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map } from 'rxjs/internal/operators/map';
+import { map } from 'rxjs/operators';
 import { FbResponse } from './interfaces';
 import { environment } from 'src/environments/environment';
 
