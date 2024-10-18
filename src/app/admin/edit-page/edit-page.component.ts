@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { Product } from 'src/app/shared/interfaces';
@@ -12,7 +12,7 @@ import { ProductService } from 'src/app/shared/product.service';
 })
 export class EditPageComponent implements OnInit {
 
-  form: FormGroup;
+  form: UntypedFormGroup;
   product: Product;
   isSubmit: Boolean = false;
 
@@ -31,12 +31,12 @@ export class EditPageComponent implements OnInit {
       )
       .subscribe(product => {
         this.product = product;
-        this.form = new FormGroup({
-          type: new FormControl(product.type, Validators.required),
-          title: new FormControl(product.title, Validators.required),
-          photo: new FormControl(product.photo, Validators.required),
-          info: new FormControl(product.info, Validators.required),
-          price: new FormControl(product.price, Validators.required),
+        this.form = new UntypedFormGroup({
+          type: new UntypedFormControl(product.type, Validators.required),
+          title: new UntypedFormControl(product.title, Validators.required),
+          photo: new UntypedFormControl(product.photo, Validators.required),
+          info: new UntypedFormControl(product.info, Validators.required),
+          price: new UntypedFormControl(product.price, Validators.required),
         });
       });
   }

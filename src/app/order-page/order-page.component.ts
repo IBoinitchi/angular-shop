@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductService } from '../shared/product.service';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { OrderService } from '../shared/order.service';
 import { Product } from '../shared/interfaces';
 
@@ -13,7 +13,7 @@ export class OrderPageComponent implements OnInit {
 
   orderProducts = [];
   totalPrice = 0;
-  form: FormGroup;
+  form: UntypedFormGroup;
   isSubmit: Boolean = false;
   added: String = '';
 
@@ -28,11 +28,11 @@ export class OrderPageComponent implements OnInit {
       this.totalPrice += +this.orderProducts[i].price;
     }
 
-    this.form = new FormGroup({
-      name: new FormControl(null, Validators.required),
-      phone: new FormControl(null, Validators.required),
-      address: new FormControl(null, Validators.required),
-      payment: new FormControl('cash'),
+    this.form = new UntypedFormGroup({
+      name: new UntypedFormControl(null, Validators.required),
+      phone: new UntypedFormControl(null, Validators.required),
+      address: new UntypedFormControl(null, Validators.required),
+      payment: new UntypedFormControl('cash'),
     });
   }
 
