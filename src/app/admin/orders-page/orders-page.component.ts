@@ -14,11 +14,9 @@ export class OrdersPageComponent implements OnInit {
 	orders: Order[] = [];
 	orderSubscription: Subscription;
 	deleteSubscription: Subscription;
-	orderName = '';
+	orderName: string = '';
 
-	constructor(
-		private orderService: OrderService
-	) {}
+	constructor(private orderService: OrderService) {}
 
 	ngOnInit() {
 		this.orderSubscription = this.orderService

@@ -17,7 +17,7 @@ export class ProductPageComponent implements OnInit {
 	constructor(
 		private productService: ProductService,
 		private router: ActivatedRoute
-	) { }
+	) {}
 
 	ngOnInit() {
 		this.product = this.router.params

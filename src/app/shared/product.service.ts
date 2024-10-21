@@ -12,7 +12,7 @@ export class ProductService {
 	type = 'Phone';
 	orderProducts: Product[] = [];
 
-	constructor(private http: HttpClient) { }
+	constructor(private http: HttpClient) {}
 
 	createProduct(newProduct: Product): Observable<Product> {
 		return this.http.post<FirebaseResponse>(`${environment.firebaseDBUrl}/products.json`, newProduct)

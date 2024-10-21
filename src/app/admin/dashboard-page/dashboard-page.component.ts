@@ -15,9 +15,7 @@ export class DashboardPageComponent implements OnInit {
 	deleteSubscription: Subscription;
 	productName: string = '';
 
-	constructor(
-		private productService: ProductService
-	) { }
+	constructor(private productService: ProductService) {}
 
 	ngOnInit() {
 		this.productSubscription = this.productService
