@@ -11,16 +11,16 @@ import { Product } from '../shared/interfaces';
 })
 export class OrderPageComponent implements OnInit {
 
-	orderProducts = [];
-	totalPrice = 0;
-	form: UntypedFormGroup;
+	orderProducts: Product[] = [];
+	totalPrice: number = 0;
+	form: UntypedFormGroup = null;
 	isSubmit: Boolean = false;
 	added: String = '';
 
 	constructor(
 		private productService: ProductService,
 		private orderService: OrderService
-	) { }
+	) {}
 
 	ngOnInit() {
 		this.orderProducts = this.productService.orderProducts;
@@ -43,21 +43,21 @@ export class OrderPageComponent implements OnInit {
 
 		this.isSubmit = true;
 
-		const order = {
-			name: this.form.value.name,
-			phone: this.form.value.phone,
-			address: this.form.value.address,
-			payment: this.form.value.payment,
-			orders: this.orderProducts,
-			price: this.totalPrice,
-			date: new Date()
-		};
-
-		this.orderService.createOrder(order).subscribe(res => {
-			this.form.reset();
-			this.added = 'Delivery is framed';
-			this.isSubmit = false;
-		});
+		this.orderService
+			.createOrder({
+				name: this.form.value.name,
+				phone: this.form.value.phone,
+				address: this.form.value.address,
+				payment: this.form.value.payment,
+				products: this.orderProducts,
+				price: this.totalPrice,
+				date: new Date()
+			})
+			.subscribe(() => {
+				this.form.reset();
+				this.added = 'Delivery is framed';
+				this.isSubmit = false;
+			});
 	}
 
 	deleteOrder(product: Product) {

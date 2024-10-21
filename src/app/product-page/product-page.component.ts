@@ -3,6 +3,7 @@ import { ProductService } from '../shared/product.service';
 import { ActivatedRoute } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { Product } from '../shared/interfaces';
+import { Observable } from 'rxjs';
 
 @Component({
 	selector: 'app-product-page',
@@ -11,7 +12,7 @@ import { Product } from '../shared/interfaces';
 })
 export class ProductPageComponent implements OnInit {
 
-	product;
+	product: Observable<Product> = null;
 
 	constructor(
 		private productService: ProductService,

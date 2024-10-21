@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { Product } from 'src/app/shared/interfaces';
 import { ProductService } from 'src/app/shared/product.service';
 
 @Component({
@@ -9,10 +10,10 @@ import { ProductService } from 'src/app/shared/product.service';
 })
 export class DashboardPageComponent implements OnInit {
 
-	products = [];
+	products: Product[] = [];
 	productSubscription: Subscription;
 	deleteSubscription: Subscription;
-	productName = '';
+	productName: string = '';
 
 	constructor(
 		private productService: ProductService
@@ -26,7 +27,7 @@ export class DashboardPageComponent implements OnInit {
 			});
 	}
 
-	delete(productId) {
+	delete(productId: string) {
 		this.deleteSubscription = this.productService
 			.deleteProduct(productId)
 			.subscribe(() => {

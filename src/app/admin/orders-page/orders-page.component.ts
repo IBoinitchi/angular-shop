@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
 import { Subscription } from 'rxjs/internal/Subscription';
+import { Order } from 'src/app/shared/interfaces';
 import { OrderService } from 'src/app/shared/order.service';
 
 @Component({
@@ -9,14 +11,14 @@ import { OrderService } from 'src/app/shared/order.service';
 })
 export class OrdersPageComponent implements OnInit {
 
-	orders = [];
+	orders: Order[] = [];
 	orderSubscription: Subscription;
 	deleteSubscription: Subscription;
 	orderName = '';
 
 	constructor(
 		private orderService: OrderService
-	) { }
+	) {}
 
 	ngOnInit() {
 		this.orderSubscription = this.orderService
@@ -30,7 +32,7 @@ export class OrdersPageComponent implements OnInit {
 		this.deleteSubscription = this.orderService
 			.deleteOrder(orderId)
 			.subscribe(() => {
-				this.orders = this.orders.filter(product => product.id !== orderId);
+				this.orders = this.orders.filter(order => order.id !== orderId);
 			});
 	}
 

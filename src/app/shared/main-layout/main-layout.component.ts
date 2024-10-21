@@ -7,17 +7,14 @@ import { ProductService } from '../product.service';
 	templateUrl: './main-layout.component.html',
 	styleUrls: ['./main-layout.component.scss']
 })
-export class MainLayoutComponent implements OnInit {
+export class MainLayoutComponent {
 
 	type = 'Phone';
 
 	constructor(
 		private router: Router,
 		private productService: ProductService
-	) { }
-
-	ngOnInit() {
-	}
+	) {}
 
 	setType(type = '') {
 		this.type = type;

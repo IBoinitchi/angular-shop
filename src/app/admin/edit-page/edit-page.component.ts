@@ -13,14 +13,14 @@ import { ProductService } from 'src/app/shared/product.service';
 export class EditPageComponent implements OnInit {
 
 	form: UntypedFormGroup;
-	product: Product;
+	product: Product = null;
 	isSubmit: Boolean = false;
 
 	constructor(
 		private route: ActivatedRoute,
 		private productService: ProductService,
 		private router: Router
-	) { }
+	) {}
 
 	ngOnInit() {
 		this.route.params
