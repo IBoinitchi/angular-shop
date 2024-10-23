@@ -17,11 +17,16 @@ jobs:
         with:
           node-version: '18.20.4'
 
-      - name: Run Bash script
+      - name: Create production environment
+        run: node create-prod-env.js
         env: 
-          ENV_API_KEY: ${{ secrets.ENV_API_KEY }}
-          ENV_FB_DB_URL: ${{ secrets.ENV_FB_DB_URL }}
-        run: bash bash.sh
+          PROD_ENV_CONFIG: secrets.PROD_ENV_CONFIG
+
+    #   - name: Run Bash script
+    #     env: 
+    #       ENV_API_KEY: ${{ secrets.ENV_API_KEY }}
+    #       ENV_FB_DB_URL: ${{ secrets.ENV_FB_DB_URL }}
+    #     run: bash bash.sh
 
       - name: Install dependencies
         run: npm install --save --legacy-peer-deps

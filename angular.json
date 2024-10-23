@@ -54,7 +54,7 @@
                   "with": "src/environments/environment.dev.ts"
                 }
               ],
-              "outputHashing": "all",
+              "outputHashing": "all"
             },
             "production": {
               "fileReplacements": [
