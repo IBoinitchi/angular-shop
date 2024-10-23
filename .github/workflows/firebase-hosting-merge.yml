@@ -22,12 +22,6 @@ jobs:
         env: 
           PROD_ENV_CONFIG: secrets.PROD_ENV_CONFIG
 
-    #   - name: Run Bash script
-    #     env: 
-    #       ENV_API_KEY: ${{ secrets.ENV_API_KEY }}
-    #       ENV_FB_DB_URL: ${{ secrets.ENV_FB_DB_URL }}
-    #     run: bash bash.sh
-
       - name: Install dependencies
         run: npm install --save --legacy-peer-deps
 
