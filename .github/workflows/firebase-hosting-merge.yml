@@ -20,7 +20,7 @@ jobs:
       - name: Create production environment
         run: node create-prod-env.js
         env: 
-          PROD_ENV_CONFIG: secrets.PROD_ENV_CONFIG
+          PROD_ENV_CONFIG: ${{ secrets.PROD_ENV_CONFIG }}
 
       - name: Install dependencies
         run: npm install --save --legacy-peer-deps
