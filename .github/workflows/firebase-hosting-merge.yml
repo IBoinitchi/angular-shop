@@ -18,9 +18,9 @@ jobs:
           node-version: '18.20.4'
 
       - name: Create production environment
-        run: node create-prod-env.js
         env: 
           PROD_ENV_CONFIG: ${{ secrets.PROD_ENV_CONFIG }}
+        run: node create-prod-env.js
 
       - name: Install dependencies
         run: npm install --save --legacy-peer-deps
