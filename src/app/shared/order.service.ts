@@ -39,7 +39,7 @@ export class OrderService {
 			);
 	}
 
-	deleteOrder(orderId: string) {
+	deleteOrder(orderId: string): Observable<any> {
 		return this.http.delete(`${environment.firebaseDBUrl}/orders/${orderId}.json`);
 	}
 }

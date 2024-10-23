@@ -9,7 +9,7 @@ import { ProductService } from '../shared/product.service';
 })
 export class ProductComponent {
 
-	@Input() product: Product
+	@Input() product: Product = {};
 
 	constructor(private productService: ProductService) {}
 

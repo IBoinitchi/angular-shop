@@ -41,7 +41,7 @@ export class ProductService {
 			);
 	}
 
-	getProduct(productId: string) {
+	getProduct(productId: string): Observable<Product> {
 		return this.http.get<Product>(`${environment.firebaseDBUrl}/products/${productId}.json`)
 			.pipe(
 				map((product: Product) => {
@@ -54,11 +54,11 @@ export class ProductService {
 			);
 	}
 
-	deleteProduct(productId: string) {
+	deleteProduct(productId: string): Observable<any> {
 		return this.http.delete(`${environment.firebaseDBUrl}/products/${productId}.json`);
 	}
 
-	updateProduct(product: Product) {
+	updateProduct(product: Product): Observable<any> {
 		return this.http.patch(`${environment.firebaseDBUrl}/products/${product.id}.json`, product);
 	}
 

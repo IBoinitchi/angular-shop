@@ -17,18 +17,14 @@ export class EditPageComponent implements OnInit {
 	isSubmit: Boolean = false;
 
 	constructor(
-		private route: ActivatedRoute,
 		private productService: ProductService,
+		private route: ActivatedRoute,
 		private router: Router
-	) {}
+	) { }
 
 	ngOnInit() {
-		this.route.params
-			.pipe(
-				switchMap(params => {
-					return this.productService.getProduct(params.id)
-				})
-			)
+		this.productService
+			.getProduct(this.route.snapshot.params['id'])
 			.subscribe(product => {
 				this.product = product;
 				this.form = new UntypedFormGroup({
