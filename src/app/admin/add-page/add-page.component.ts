@@ -35,18 +35,19 @@ export class AddPageComponent implements OnInit {
 
 		this.isSubmit = true;
 
-		this.productService.createProduct({
-			type: this.form.value.type,
-			title: this.form.value.title,
-			photo: this.form.value.photo,
-			info: this.form.value.info,
-			price: this.form.value.price,
-			date: new Date()
-		}).subscribe(res => {
-			this.form.reset();
-			this.isSubmit = false;
-			this.router.navigate(['/admin', 'dashboard']);
-		});
+		this.productService
+			.createProduct({
+				type: this.form.value.type,
+				title: this.form.value.title,
+				photo: this.form.value.photo,
+				info: this.form.value.info,
+				price: this.form.value.price,
+				date: new Date()
+			}).subscribe(res => {
+				this.form.reset();
+				this.isSubmit = false;
+				this.router.navigate(['/admin', 'dashboard']);
+			});
 	}
 
 }

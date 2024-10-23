@@ -13,7 +13,7 @@ export class LoginPageComponent implements OnInit {
 	submitted = false;
 
 	constructor(
-		public authService: AuthService,
+		private authService: AuthService,
 		private router: Router
 	) {}
 
@@ -31,16 +31,17 @@ export class LoginPageComponent implements OnInit {
 
 		this.submitted = true;
 
-		this.authService.login({
-			email: this.form.value.email,
-			password: this.form.value.password,
-			returnSecureToken: true
-		}).subscribe(res => {
-			this.form.reset();
-			this.router.navigate(['/admin', 'dashboard']);
-		}, () => {
-			this.submitted = false;
-		});
+		this.authService
+			.login({
+				email: this.form.value.email,
+				password: this.form.value.password,
+				returnSecureToken: true
+			}).subscribe(res => {
+				this.form.reset();
+				this.router.navigate(['/admin', 'dashboard']);
+			}, () => {
+				this.submitted = false;
+			});
 	}
 
 }

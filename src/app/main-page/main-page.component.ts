@@ -13,9 +13,7 @@ export class MainPageComponent implements OnInit {
 	products: Observable<Product[]> = null;
 	productType: string = '';
 
-	constructor(
-		private productService: ProductService
-	) {}
+	constructor(private productService: ProductService) {}
 
 	ngOnInit() {
 		this.products = this.productService.getAllProducts();

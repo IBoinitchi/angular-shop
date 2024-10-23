@@ -10,13 +10,13 @@ import { AuthService } from 'src/app/shared/auth.service';
 export class AdminLayoutComponent {
 
 	constructor(
-		public auth: AuthService,
+		private authService: AuthService,
 		private router: Router
 	) {}
 
 	logout($event) {
 		$event.preventDefault();
-		this.auth.logout();
+		this.authService.logout();
 		this.router.navigate(['/admin', 'login']);
 	}
 }
