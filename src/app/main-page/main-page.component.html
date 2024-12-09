@@ -1,7 +1,11 @@
 <div *ngIf="products | async as products; else loading" class="dashboard">
-	<app-product *ngFor="let product of products | sorting: getType()" class="box" [product]="product"></app-product>
+  <app-product
+    *ngFor="let product of products"
+    class="box"
+    [product]="product"
+  />
 </div>
 
 <ng-template #loading>
-	<p class="text-center">Loading...</p>
+  <p class="text-center">Loading...</p>
 </ng-template>

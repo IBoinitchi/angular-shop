@@ -1,25 +1,26 @@
-import { Component, OnInit } from '@angular/core';
-import { ProductService } from '../shared/product.service';
-import { Product } from '../shared/interfaces';
-import { Observable } from 'rxjs';
+import { Component, OnInit } from "@angular/core";
+import { ProductService } from "../shared/product.service";
+import { Product } from "../shared/interfaces";
+import { Observable } from "rxjs";
+import { ActivatedRoute } from "@angular/router";
 
 @Component({
-	selector: 'app-main-page',
-	templateUrl: './main-page.component.html',
-	styleUrls: ['./main-page.component.scss']
+  selector: "app-main-page",
+  templateUrl: "./main-page.component.html",
+  styleUrls: ["./main-page.component.scss"],
 })
 export class MainPageComponent implements OnInit {
+  products: Observable<Product[]> = null;
 
-	products: Observable<Product[]> = null;
-	productType: string = '';
+  constructor(
+    private route: ActivatedRoute,
+    private productService: ProductService
+  ) {}
 
-	constructor(private productService: ProductService) {}
-
-	ngOnInit() {
-		this.products = this.productService.getAllProducts();
-	}
-
-	getType() {
-		return this.productService.type;
-	}
+  ngOnInit() {
+    this.route.params.subscribe(({ productType }) => {
+      this.productService.productType = productType || "phone";
+      this.products = this.productService.getAllProducts();
+    });
+  }
 }

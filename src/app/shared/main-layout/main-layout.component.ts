@@ -1,32 +1,20 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { ProductService } from '../product.service';
+import { Component } from "@angular/core";
+import { Router } from "@angular/router";
+import { ProductService } from "../product.service";
+import { ProductTypeEnum } from "../productTypeEnum";
 
 @Component({
-	selector: 'app-main-layout',
-	templateUrl: './main-layout.component.html',
-	styleUrls: ['./main-layout.component.scss']
+  selector: "app-main-layout",
+  templateUrl: "./main-layout.component.html",
+  styleUrls: ["./main-layout.component.scss"],
 })
 export class MainLayoutComponent {
+  constructor(private router: Router, private productService: ProductService) {}
 
-	type = 'Phone';
-
-	constructor(
-		private router: Router,
-		private productService: ProductService
-	) {}
-
-	setType(type = '') {
-		this.type = type;
-
-		if (this.type !== 'Order') {
-			this.router.navigate(['/'], {
-				queryParams: {
-					type: this.type
-				}
-			});
-
-			this.productService.setType(this.type);
-		}
-	}
+  setProductPage(productType = "") {
+    if (productType! in ProductTypeEnum) {
+      this.router.navigate(["/products", productType]);
+      this.productService.productType = productType;
+    }
+  }
 }
