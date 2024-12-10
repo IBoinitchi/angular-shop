@@ -10,6 +10,7 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { AuthGuard } from "../shared/auth.guard";
 import { QuillModule } from "ngx-quill";
 import { SearchPipe } from "../shared/search.pipe";
+import { AuthorizedDirective } from "../shared/authorized.directive";
 
 @NgModule({
   imports: [
@@ -47,6 +48,8 @@ import { SearchPipe } from "../shared/search.pipe";
         ],
       },
     ]),
+    SearchPipe,
+    AuthorizedDirective,
   ],
   exports: [RouterModule],
   declarations: [
@@ -55,7 +58,6 @@ import { SearchPipe } from "../shared/search.pipe";
     AddPageComponent,
     EditPageComponent,
     OrdersPageComponent,
-    SearchPipe,
   ],
 })
 export class AdminModule {}

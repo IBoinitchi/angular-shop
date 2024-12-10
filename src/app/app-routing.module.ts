@@ -4,7 +4,7 @@ import { MainLayoutComponent } from "./shared/main-layout/main-layout.component"
 import { MainPageComponent } from "./main-page/main-page.component";
 import { ProductPageComponent } from "./product-page/product-page.component";
 import { OrderPageComponent } from "./order-page/order-page.component";
-import { LoginPageComponent } from "./admin/login-page/login-page.component";
+import { LoginPageComponent } from "./login-page/login-page.component";
 import { AdminLayoutComponent } from "./admin/shared/admin-layout/admin-layout.component";
 
 const routes: Routes = [
@@ -23,10 +23,6 @@ const routes: Routes = [
       {
         path: "product/:id",
         component: ProductPageComponent,
-      },
-      {
-        path: "order",
-        component: OrderPageComponent,
       },
       {
         path: "order",

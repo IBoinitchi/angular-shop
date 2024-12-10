@@ -2,7 +2,7 @@
   <h1>
     <a routerLink="/">Online Shop</a>
   </h1>
-
+  <div *appAuthorized="'*'">Here!2</div>
   <!-- TODO - Change `isAuthorized` to derective -->
   <ul *ngIf="isAuthorized(); else login">
     <li routerLinkActive="active">
@@ -29,5 +29,5 @@
 </nav>
 
 <div class="container">
-  <router-outlet></router-outlet>
+  <router-outlet />
 </div>

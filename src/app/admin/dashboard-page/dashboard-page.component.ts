@@ -1,5 +1,4 @@
 import { Component, OnInit } from "@angular/core";
-import { Subscription } from "rxjs";
 import { Product } from "src/app/shared/interfaces";
 import { ProductService } from "src/app/shared/product.service";
 

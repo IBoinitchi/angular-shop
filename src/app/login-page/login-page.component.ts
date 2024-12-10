@@ -1,0 +1,67 @@
+import { Component, OnInit } from "@angular/core";
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from "@angular/forms";
+import { Router } from "@angular/router";
+import { AuthService } from "src/app/shared/auth.service";
+
+@Component({
+  selector: "app-login-page",
+  templateUrl: "./login-page.component.html",
+  styleUrls: ["./login-page.component.scss"],
+})
+export class LoginPageComponent implements OnInit {
+  submitted = false;
+  form = new FormGroup({
+    email: new FormControl(null),
+    password: new FormControl(null),
+  });
+
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private formBuilder: FormBuilder
+  ) {}
+
+  ngOnInit() {
+    if (this.authService.isAuth()) {
+      this.router.navigate(["/admin", "dashboard"]);
+    }
+
+    this.form = this.formBuilder.group({
+      email: ["", [Validators.required, Validators.email]],
+      password: ["", [Validators.required, Validators.minLength(6)]],
+    });
+  }
+
+  get fc() {
+    return this.form.controls;
+  }
+
+  submit() {
+    if (this.form.invalid) {
+      return;
+    }
+
+    this.submitted = true;
+
+    this.authService
+      .login({
+        email: this.form.value.email,
+        password: this.form.value.password,
+        returnSecureToken: true,
+      })
+      .subscribe(
+        (res) => {
+          this.form.reset();
+          this.router.navigate(["/admin", "dashboard"]);
+        },
+        () => {
+          this.submitted = false;
+        }
+      );
+  }
+}

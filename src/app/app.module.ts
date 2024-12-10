@@ -13,7 +13,8 @@ import { AuthInterceptor } from "./shared/auth.interseptor";
 import { ProductComponent } from "./shared/product/product.component";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ServiceWorkerModule } from "@angular/service-worker";
-import { LoginPageComponent } from "./admin/login-page/login-page.component";
+import { LoginPageComponent } from "./login-page/login-page.component";
+import { AuthorizedDirective } from "./shared/authorized.directive";
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { LoginPageComponent } from "./admin/login-page/login-page.component";
       registrationStrategy: "registerWhenStable:30000",
     }),
     ProductComponent,
+    AuthorizedDirective,
   ],
   providers: [
     {
