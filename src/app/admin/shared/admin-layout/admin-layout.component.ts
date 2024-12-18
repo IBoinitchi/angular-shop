@@ -17,6 +17,6 @@ export class AdminLayoutComponent {
   }
 
   isAuthorized() {
-    return this.authService.isAuth();
+    return this.authService.isAuthenticated();
   }
 }

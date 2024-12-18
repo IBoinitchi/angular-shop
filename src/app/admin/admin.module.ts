@@ -11,6 +11,8 @@ import { AuthGuard } from "../shared/auth.guard";
 import { QuillModule } from "ngx-quill";
 import { SearchPipe } from "../shared/search.pipe";
 import { AuthorizedDirective } from "../shared/authorized.directive";
+import { environment } from "src/environments/environment";
+// import { AngularFireModule } from "@angular/fire";
 
 @NgModule({
   imports: [
@@ -50,6 +52,7 @@ import { AuthorizedDirective } from "../shared/authorized.directive";
     ]),
     SearchPipe,
     AuthorizedDirective,
+    // AngularFireModule.initializeApp(environment.firebaseConfig),
   ],
   exports: [RouterModule],
   declarations: [

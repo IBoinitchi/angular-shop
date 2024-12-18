@@ -22,7 +22,7 @@ export class AuthGuard {
     | Promise<boolean | UrlTree>
     | boolean
     | UrlTree {
-    if (this.authService.isAuth()) {
+    if (this.authService.isAuthenticated()) {
       return true;
     }
 

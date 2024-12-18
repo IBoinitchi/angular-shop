@@ -7,15 +7,18 @@ import { tap } from "rxjs/operators";
   providedIn: "root",
 })
 export class AuthService {
+  firebaseUrl = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${environment.firebaseConfig.apiKey}`;
+
   constructor(private http: HttpClient) {}
 
-  login(user) {
-    return this.http
-      .post(
-        `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${environment.apiKey}`,
-        user
-      )
-      .pipe(tap(this.setToken));
+  login(email: string, password: string) {
+    const body = {
+      email: email,
+      password: password,
+      returnSecureToken: true,
+    };
+
+    return this.http.post(this.firebaseUrl, body).pipe(tap(this.setToken));
   }
 
   private setToken(response) {
@@ -25,7 +28,6 @@ export class AuthService {
       );
       localStorage.setItem("fb-token-exp", expData.toString());
       localStorage.setItem("fb-token", response.idToken);
-	  
     } else {
       localStorage.clear();
     }
@@ -46,7 +48,7 @@ export class AuthService {
     this.setToken(null);
   }
 
-  isAuth() {
+  isAuthenticated() {
     return !!this.token;
   }
 }

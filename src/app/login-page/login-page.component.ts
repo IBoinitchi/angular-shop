@@ -27,7 +27,7 @@ export class LoginPageComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    if (this.authService.isAuth()) {
+    if (this.authService.isAuthenticated()) {
       this.router.navigate(["/admin", "dashboard"]);
     }
 
@@ -49,11 +49,7 @@ export class LoginPageComponent implements OnInit {
     this.submitted = true;
 
     this.authService
-      .login({
-        email: this.form.value.email,
-        password: this.form.value.password,
-        returnSecureToken: true,
-      })
+      .login(this.form.value.email, this.form.value.password)
       .subscribe(
         (res) => {
           this.form.reset();

@@ -18,7 +18,7 @@ export class ProductService {
   createProduct(newProduct: Product): Observable<Product> {
     return this.http
       .post<FirebaseResponse>(
-        `${environment.firebaseDBUrl}/products.json`,
+        `${environment.firebaseConfig.databaseURL}/products.json`,
         newProduct
       )
       .pipe(
@@ -34,7 +34,7 @@ export class ProductService {
 
   getAllProducts(): Observable<Product[]> {
     return this.http
-      .get<Product[]>(`${environment.firebaseDBUrl}/products.json`)
+      .get<Product[]>(`${environment.firebaseConfig.databaseURL}/products.json`)
       .pipe(
         map((products) => {
           return Object.keys(products)
@@ -58,7 +58,9 @@ export class ProductService {
 
   getProduct(productId: string): Observable<Product> {
     return this.http
-      .get<Product>(`${environment.firebaseDBUrl}/products/${productId}.json`)
+      .get<Product>(
+        `${environment.firebaseConfig.databaseURL}/products/${productId}.json`
+      )
       .pipe(
         map((product: Product) => {
           return {
@@ -72,13 +74,13 @@ export class ProductService {
 
   deleteProduct(productId: string): Observable<any> {
     return this.http.delete(
-      `${environment.firebaseDBUrl}/products/${productId}.json`
+      `${environment.firebaseConfig.databaseURL}/products/${productId}.json`
     );
   }
 
   updateProduct(product: Product): Observable<any> {
     return this.http.patch(
-      `${environment.firebaseDBUrl}/products/${product.id}.json`,
+      `${environment.firebaseConfig.databaseURL}/products/${product.id}.json`,
       product
     );
   }

@@ -1,3 +1,5 @@
+import { RoleTypeEnum } from "./roteTypeEnum";
+
 export interface Product {
   id?: string;
   type?: string;
@@ -21,4 +23,10 @@ export interface Order {
 
 export interface FirebaseResponse {
   name: string;
+}
+
+export interface User {
+  name: string;
+  email: string;
+  role?: RoleTypeEnum;
 }

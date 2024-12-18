@@ -14,7 +14,7 @@ export class OrderService {
   createOrder(newOrder: Order): Observable<Order> {
     return this.http
       .post<FirebaseResponse>(
-        `${environment.firebaseDBUrl}/orders.json`,
+        `${environment.firebaseConfig.databaseURL}/orders.json`,
         newOrder
       )
       .pipe(
@@ -30,7 +30,7 @@ export class OrderService {
 
   getAllOrders(): Observable<Order[]> {
     return this.http
-      .get<Order[]>(`${environment.firebaseDBUrl}/orders.json`)
+      .get<Order[]>(`${environment.firebaseConfig.databaseURL}/orders.json`)
       .pipe(
         map((orders) => {
           return Object.keys(orders).map((orderId) => ({
@@ -44,7 +44,7 @@ export class OrderService {
 
   deleteOrder(orderId: string): Observable<any> {
     return this.http.delete(
-      `${environment.firebaseDBUrl}/orders/${orderId}.json`
+      `${environment.firebaseConfig.databaseURL}/orders/${orderId}.json`
     );
   }
 }
