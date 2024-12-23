@@ -12,31 +12,29 @@ admin.initializeApp({
 const db = admin.database();
 const adminData = serviceAccount.admin_data;
 
-const user = {
-  email: adminData.email,
-  name: adminData.name,
-  role: adminData.role,
-  canBeDeleted: adminData.canBeDeleted,
-};
-
-async function createUserIfNotExists(user) {
+async function createUserIfNotExists(admin) {
   try {
     const ref = db.ref("users");
     const snapshot = await ref
       .orderByChild("email")
-      .equalTo(user.email)
+      .equalTo(admin.email)
       .once("value");
 
     if (snapshot.exists()) {
       console.log("User already exists.");
     } else {
       const createdUser = await createFirebaseAuthUser(
-        adminData.email,
-        adminData.password
+        admin.email,
+        admin.password
       );
 
       const newUserRef = db.ref(`/users/${createdUser.uid}`);
-      await newUserRef.set(user);
+      await newUserRef.set({
+        email: admin.email,
+        name: admin.name,
+        role: admin.role,
+        canBeDeleted: admin.canBeDeleted,
+      });
 
       console.log("User created successfully");
     }
@@ -63,4 +61,4 @@ async function createFirebaseAuthUser(email, password) {
   }
 }
 
-createUserIfNotExists(user);
+createUserIfNotExists(adminData);
