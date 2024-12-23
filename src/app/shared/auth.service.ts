@@ -1,14 +1,16 @@
-import { Injectable } from "@angular/core";
+import { Injectable, OnDestroy } from "@angular/core";
 import { AngularFireAuth } from "@angular/fire/compat/auth";
 import { AngularFireDatabase } from "@angular/fire/compat/database";
-import { from, Observable, of } from "rxjs";
-import { catchError, switchMap, tap } from "rxjs/operators";
+import { from, Observable, of, Subject } from "rxjs";
+import { catchError, switchMap, tap, map, takeUntil } from "rxjs/operators";
 import { RoleTypeEnum } from "./roleTypeEnum";
 
 @Injectable({
   providedIn: "root",
 })
-export class AuthService {
+export class AuthService implements OnDestroy {
+  private destroy$ = new Subject<void>();
+
   constructor(
     private afAuth: AngularFireAuth,
     private db: AngularFireDatabase
@@ -16,13 +18,15 @@ export class AuthService {
 
   login(email: string, password: string): Observable<any> {
     return from(this.afAuth.signInWithEmailAndPassword(email, password)).pipe(
-      switchMap((userCredential) =>
-        this.checkUserInDatabase(userCredential.user)
-      ),
+      switchMap((userCredential) => {
+        const user = userCredential.user;
+        return this.checkUserInDatabase(user);
+      }),
       catchError((error) => {
         console.error("Login error: ", error);
         return of(null);
-      })
+      }),
+      takeUntil(this.destroy$)
     );
   }
 
@@ -31,17 +35,21 @@ export class AuthService {
       return of(null);
     }
 
-    return from(this.db.object(`/users/${user.uid}`).valueChanges()).pipe(
-      tap((userData) => {
+    return from(this.db.object(`/users/${user.uid}`).snapshotChanges()).pipe(
+      map((snapshot) => snapshot.payload.val()),
+      tap((userData: any) => {
         const tokenManager = user.multiFactor.user.stsTokenManager;
+
         if (!userData) {
-          tokenManager.role = this.createUser(user).role;
+          this.createUser(user);
+          tokenManager.role = RoleTypeEnum.MODERATOR;
         } else {
           tokenManager.role = userData.role;
         }
 
         this.setToken(tokenManager);
-      })
+      }),
+      takeUntil(this.destroy$)
     );
   }
 
@@ -54,13 +62,7 @@ export class AuthService {
     };
 
     this.db.object(`/users/${user.uid}`).set(userData);
-    return userData;
   }
-
-  //   // Logout
-  //   logout() {
-  //     this.afAuth.signOut();
-  //   }
 
   private setToken(response) {
     if (response) {
@@ -72,7 +74,6 @@ export class AuthService {
       localStorage.setItem("role", response.role);
     } else {
       localStorage.clear();
-      this.afAuth.signOut();
     }
   }
 
@@ -93,5 +94,10 @@ export class AuthService {
 
   isAuthenticated() {
     return !!this.token;
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
