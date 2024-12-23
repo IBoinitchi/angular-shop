@@ -35,7 +35,7 @@ export class AuthService {
       tap((userData) => {
         const tokenManager = user.multiFactor.user.stsTokenManager;
         if (!userData) {
-          tokenManager.role = this.createUser(user.uid).role;
+          tokenManager.role = this.createUser(user).role;
         } else {
           tokenManager.role = userData.role;
         }
@@ -45,14 +45,15 @@ export class AuthService {
     );
   }
 
-  private createUser(uid: string) {
+  private createUser(user) {
     const userData = {
+      email: user.email,
       role: RoleTypeEnum.MODERATOR,
       name: "New User",
       canBeDeleted: true,
     };
 
-    this.db.object(`/users/${uid}`).set(userData);
+    this.db.object(`/users/${user.uid}`).set(userData);
     return userData;
   }
 
