@@ -15,6 +15,10 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ServiceWorkerModule } from "@angular/service-worker";
 import { LoginPageComponent } from "./login-page/login-page.component";
 import { AuthorizedDirective } from "./shared/authorized.directive";
+import { environment } from "src/environments/environment";
+import { AngularFireModule } from "@angular/fire/compat";
+import { AngularFireAuthModule } from "@angular/fire/compat/auth";
+import { AngularFireDatabaseModule } from "@angular/fire/compat/database";
 
 @NgModule({
   declarations: [
@@ -40,6 +44,9 @@ import { AuthorizedDirective } from "./shared/authorized.directive";
     }),
     ProductComponent,
     AuthorizedDirective,
+    AngularFireModule.initializeApp(environment.firebaseConfig),
+    AngularFireAuthModule,
+    AngularFireDatabaseModule,
   ],
   providers: [
     {

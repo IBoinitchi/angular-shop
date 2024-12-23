@@ -15,12 +15,17 @@ jobs:
       - name: Use Node.js 18.20.4
         uses: actions/setup-node@v4
         with:
-          node-version: '18.20.4'
+          node-version: "18.20.4"
 
       - name: Create production environment
-        env: 
+        env:
           PROD_ENV_CONFIG: ${{ secrets.PROD_ENV_CONFIG }}
         run: node create-prod-env.js
+
+      - name: Create production environment
+        env:
+          SERVICE_ACCOUNT_KEY: ${{ secrets.SERVICE_ACCOUNT_KEY }}
+        run: node create-user.js
 
       - name: Install dependencies
         run: npm install --save --legacy-peer-deps

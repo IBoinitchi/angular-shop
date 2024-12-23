@@ -7,6 +7,7 @@
 *.log
 /node_modules/
 /src/environments/**
+./serviceAccountKey.json
 
 # CircleCI temporary file for cache key computation.
 # See `save_month_to_file` in `.circleci/config.yml`.

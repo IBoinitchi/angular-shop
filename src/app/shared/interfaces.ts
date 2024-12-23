@@ -1,4 +1,4 @@
-import { RoleTypeEnum } from "./roteTypeEnum";
+import { RoleTypeEnum } from "./roleTypeEnum";
 
 export interface Product {
   id?: string;

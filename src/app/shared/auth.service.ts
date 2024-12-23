@@ -1,47 +1,89 @@
 import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { environment } from "src/environments/environment";
-import { tap } from "rxjs/operators";
+import { AngularFireAuth } from "@angular/fire/compat/auth";
+import { AngularFireDatabase } from "@angular/fire/compat/database";
+import { from, Observable, of } from "rxjs";
+import { catchError, switchMap, tap } from "rxjs/operators";
+import { RoleTypeEnum } from "./roleTypeEnum";
 
 @Injectable({
   providedIn: "root",
 })
 export class AuthService {
-  firebaseUrl = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${environment.firebaseConfig.apiKey}`;
+  constructor(
+    private afAuth: AngularFireAuth,
+    private db: AngularFireDatabase
+  ) {}
 
-  constructor(private http: HttpClient) {}
+  login(email: string, password: string): Observable<any> {
+    return from(this.afAuth.signInWithEmailAndPassword(email, password)).pipe(
+      switchMap((userCredential) =>
+        this.checkUserInDatabase(userCredential.user)
+      ),
+      catchError((error) => {
+        console.error("Login error: ", error);
+        return of(null);
+      })
+    );
+  }
 
-  login(email: string, password: string) {
-    const body = {
-      email: email,
-      password: password,
-      returnSecureToken: true,
+  private checkUserInDatabase(user): Observable<any> {
+    if (!user.uid) {
+      return of(null);
+    }
+
+    return from(this.db.object(`/users/${user.uid}`).valueChanges()).pipe(
+      tap((userData) => {
+        const tokenManager = user.multiFactor.user.stsTokenManager;
+        if (!userData) {
+          tokenManager.role = this.createUser(user.uid).role;
+        } else {
+          tokenManager.role = userData.role;
+        }
+
+        this.setToken(tokenManager);
+      })
+    );
+  }
+
+  private createUser(uid: string) {
+    const userData = {
+      role: RoleTypeEnum.MODERATOR,
+      name: "New User",
+      canBeDeleted: true,
     };
 
-    return this.http.post(this.firebaseUrl, body).pipe(tap(this.setToken));
+    this.db.object(`/users/${uid}`).set(userData);
+    return userData;
   }
+
+  //   // Logout
+  //   logout() {
+  //     this.afAuth.signOut();
+  //   }
 
   private setToken(response) {
     if (response) {
-      const expData = new Date(
-        new Date().getTime() + response.expiresIn * 1000
+      localStorage.setItem(
+        "token-exp",
+        new Date(response.expirationTime).toString()
       );
-      localStorage.setItem("fb-token-exp", expData.toString());
-      localStorage.setItem("fb-token", response.idToken);
+      localStorage.setItem("token", response.accessToken);
+      localStorage.setItem("role", response.role);
     } else {
       localStorage.clear();
+      this.afAuth.signOut();
     }
   }
 
   get token() {
-    const expDate = new Date(localStorage.getItem("fb-token-exp"));
+    const expDate = new Date(localStorage.getItem("token-exp"));
 
     if (new Date() > expDate) {
       this.logout();
       return null;
     }
 
-    return localStorage.getItem("fb-token");
+    return localStorage.getItem("token");
   }
 
   logout() {
