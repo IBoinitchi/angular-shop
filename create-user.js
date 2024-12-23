@@ -2,7 +2,7 @@ const admin = require("firebase-admin");
 const fs = require("fs");
 const path = require("path");
 
-const serviceAccount = `${process.env.SERVICE_ACCOUNT_KEY}`;
+const serviceAccount = JSON.parse(`${process.env.SERVICE_ACCOUNT_KEY}`);
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -10,12 +10,13 @@ admin.initializeApp({
 });
 
 const db = admin.database();
+const adminData = serviceAccount.admin_data;
 
 const user = {
-  email: serviceAccount.admin_data.email,
-  name: serviceAccount.admin_data.name,
-  role: serviceAccount.admin_data.role,
-  canBeDeleted: serviceAccount.admin_data.canBeDeleted,
+  email: adminData.email,
+  name: adminData.name,
+  role: adminData.role,
+  canBeDeleted: adminData.canBeDeleted,
 };
 
 async function createUserIfNotExists(user) {
@@ -30,8 +31,8 @@ async function createUserIfNotExists(user) {
       console.log("User already exists.");
     } else {
       const createdUser = await createFirebaseAuthUser(
-        serviceAccount.admin_data.email,
-        serviceAccount.admin_data.password
+        adminData.email,
+        adminData.password
       );
 
       const newUserRef = db.ref(`/users/${createdUser.uid}`);
