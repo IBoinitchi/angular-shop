@@ -1,20 +1,20 @@
 import { BrowserModule } from "@angular/platform-browser";
 import { NgModule, isDevMode } from "@angular/core";
 
-import { AppRoutingModule } from "./app-routing.module";
+import { AppRoutes } from "./app.routes";
 import { AppComponent } from "./app.component";
-import { MainLayoutComponent } from "./shared/main-layout/main-layout.component";
+import { MainLayoutComponent } from "./shared/components/main-layout/main-layout.component";
 import { MainPageComponent } from "./main-page/main-page.component";
-import { ProductPageComponent } from "./product-page/product-page.component";
+import { ProductDetailsComponent } from "./shared/components/product-details/product-details.component";
 import { OrderPageComponent } from "./order-page/order-page.component";
 import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
 import { QuillModule } from "ngx-quill";
-import { AuthInterceptor } from "./shared/auth.interseptor";
-import { ProductComponent } from "./shared/product/product.component";
+import { AuthInterceptor } from "./shared/interceptors/auth.interseptor";
+import { ProductComponent } from "./shared/components/product/product.component";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ServiceWorkerModule } from "@angular/service-worker";
 import { LoginPageComponent } from "./login-page/login-page.component";
-import { AuthDirective } from "./shared/auth.directive";
+import { AuthDirective } from "./shared/directives/auth.directive";
 
 import { environment } from "src/environments/environment";
 import { provideFirebaseApp, initializeApp } from "@angular/fire/app";
@@ -26,13 +26,13 @@ import { provideDatabase, getDatabase } from "@angular/fire/database";
     AppComponent,
     MainLayoutComponent,
     MainPageComponent,
-    ProductPageComponent,
+    ProductDetailsComponent,
     OrderPageComponent,
     LoginPageComponent,
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
+    AppRoutes,
     HttpClientModule,
     QuillModule.forRoot(),
     FormsModule,

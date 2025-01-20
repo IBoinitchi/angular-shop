@@ -1,8 +1,8 @@
 import { Component, OnInit } from "@angular/core";
-import { ProductService } from "../shared/product.service";
+import { ProductService } from "../shared/services/product.service";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { OrderService } from "../shared/order.service";
-import { Product } from "../shared/interfaces";
+import { OrderService } from "../shared/services/order.service";
+import { Product } from "../shared/models/interfaces";
 import { FormControl } from "@angular/forms";
 
 @Component({

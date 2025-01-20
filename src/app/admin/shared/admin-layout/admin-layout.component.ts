@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 import { Router } from "@angular/router";
-import { AuthService } from "src/app/shared/auth.service";
-import { RoleTypeEnum } from "src/app/shared/roleTypeEnum";
+import { AuthService } from "src/app/shared/services/auth.service";
+import { RoleTypeEnum } from "src/app/shared/models/roleTypeEnum";
 
 @Component({
   selector: "app-admin-layout",
