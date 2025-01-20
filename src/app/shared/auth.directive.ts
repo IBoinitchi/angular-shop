@@ -5,9 +5,14 @@ import { AuthService } from "./auth.service";
   selector: "[appAuthorized]",
   standalone: true,
 })
-export class AuthorizedDirective {
-  @Input() set appAuthorized(role: string) {
-    console.log(role); // this will print: AGENT
+export class AuthDirective {
+  @Input() set appAuthorized(roles: string[]) {
+    if (!roles.includes(this.auth.role) && !roles.includes("*")) {
+      this.viewContainerRef.clear();
+      return;
+    }
+
+    this.viewContainerRef.createEmbeddedView(this.templateRef);
   }
 
   constructor(

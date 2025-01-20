@@ -3,11 +3,11 @@ import { Product } from "src/app/shared/interfaces";
 import { ProductService } from "src/app/shared/product.service";
 
 @Component({
-  selector: "app-dashboard-page",
-  templateUrl: "./dashboard-page.component.html",
-  styleUrls: ["./dashboard-page.component.scss"],
+  selector: "app-products-page",
+  templateUrl: "./product-list.component.html",
+  styleUrls: ["./product-list.component.scss"],
 })
-export class DashboardPageComponent implements OnInit {
+export class ProductsPageComponent implements OnInit {
   products: Product[] = [];
   productName: string = "";
 

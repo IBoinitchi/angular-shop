@@ -1,70 +1,34 @@
-import { Injectable, OnDestroy } from "@angular/core";
-import { AngularFireAuth } from "@angular/fire/compat/auth";
-import { AngularFireDatabase } from "@angular/fire/compat/database";
-import { from, Observable, of, Subject } from "rxjs";
-import { catchError, switchMap, tap, map, takeUntil } from "rxjs/operators";
+import { Injectable, OnDestroy, inject } from "@angular/core";
+import { combineLatest, from, Observable, of, Subject } from "rxjs";
+import { catchError, map, switchMap, takeUntil, tap } from "rxjs/operators";
 import { RoleTypeEnum } from "./roleTypeEnum";
+import { Auth, signInWithEmailAndPassword } from "@angular/fire/auth";
+import { RoleService } from "./role.service";
+import { Role, StorageData } from "./interfaces";
 
 @Injectable({
   providedIn: "root",
 })
 export class AuthService implements OnDestroy {
   private destroy$ = new Subject<void>();
+  private auth = inject(Auth);
+  private roleService = inject(RoleService);
+  private defaultAdminRole = RoleTypeEnum.MODERATOR;
 
-  constructor(
-    private afAuth: AngularFireAuth,
-    private db: AngularFireDatabase
-  ) {}
-
-  login(email: string, password: string): Observable<any> {
-    return from(this.afAuth.signInWithEmailAndPassword(email, password)).pipe(
-      switchMap((userCredential) => {
-        const user = userCredential.user;
-        return this.checkUserInDatabase(user);
-      }),
-      catchError((error) => {
-        console.error("Login error: ", error);
-        return of(null);
-      }),
-      takeUntil(this.destroy$)
-    );
-  }
-
-  private checkUserInDatabase(user): Observable<any> {
-    if (!user.uid) {
-      return of(null);
+  get token(): string | null {
+    const expDate = new Date(localStorage.getItem("token-exp"));
+    if (new Date() > expDate) {
+      this.logout();
+      return null;
     }
-
-    return from(this.db.object(`/users/${user.uid}`).snapshotChanges()).pipe(
-      map((snapshot) => snapshot.payload.val()),
-      tap((userData: any) => {
-        const tokenManager = user.multiFactor.user.stsTokenManager;
-
-        if (!userData) {
-          this.createUser(user);
-          tokenManager.role = RoleTypeEnum.MODERATOR;
-        } else {
-          tokenManager.role = userData.role;
-        }
-
-        this.setToken(tokenManager);
-      }),
-      takeUntil(this.destroy$)
-    );
+    return localStorage.getItem("token");
   }
 
-  private createUser(user) {
-    const userData = {
-      email: user.email,
-      role: RoleTypeEnum.MODERATOR,
-      name: "New User",
-      canBeDeleted: true,
-    };
-
-    this.db.object(`/users/${user.uid}`).set(userData);
+  get role(): string {
+    return localStorage.getItem("role") || "";
   }
 
-  private setToken(response) {
+  private setStorageData(response: StorageData | null): void {
     if (response) {
       localStorage.setItem(
         "token-exp",
@@ -77,26 +41,50 @@ export class AuthService implements OnDestroy {
     }
   }
 
-  get token() {
-    const expDate = new Date(localStorage.getItem("token-exp"));
+  login(email: string, password: string): Observable<any> {
+    return from(signInWithEmailAndPassword(this.auth, email, password)).pipe(
+      switchMap((userCredential) =>
+        // https://www.learnrxjs.io/learn-rxjs/operators/combination/combinelatest
+        combineLatest([
+          from(this.roleService.getRoleByUserId(userCredential.user.uid)),
+          of(userCredential.user),
+        ])
+      ),
+      tap(([userRole, userData]: [Role | null, any]) => {
+        if (!userRole) {
+          userRole = { role: this.defaultAdminRole };
+          this.roleService.createOrUpdateRoleByUid(userData.uid, {
+            email: userData.email,
+            role: userRole.role,
+            name: "New User",
+            canBeDeleted: true,
+          });
+        }
+        const storageData: StorageData = {
+          accessToken: userData.stsTokenManager.accessToken,
+          expirationTime: userData.stsTokenManager.expirationTime,
+          role: userRole.role,
+        };
 
-    if (new Date() > expDate) {
-      this.logout();
-      return null;
-    }
-
-    return localStorage.getItem("token");
+        this.setStorageData(storageData);
+      }),
+      catchError((error) => {
+        console.error("Login error: ", error);
+        return of(null);
+      }),
+      takeUntil(this.destroy$)
+    );
   }
 
-  logout() {
-    this.setToken(null);
+  logout(): void {
+    this.setStorageData(null);
   }
 
-  isAuthenticated() {
+  isAuthenticated(): boolean {
     return !!this.token;
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }

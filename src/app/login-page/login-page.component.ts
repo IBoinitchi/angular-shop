@@ -28,13 +28,16 @@ export class LoginPageComponent implements OnInit {
 
   ngOnInit() {
     if (this.authService.isAuthenticated()) {
-      this.router.navigate(["/admin", "dashboard"]);
+      this.router.navigate(["/admin"]);
     }
 
     this.form = this.formBuilder.group({
       email: ["", [Validators.required, Validators.email]],
       password: ["", [Validators.required, Validators.minLength(6)]],
     });
+    // this.form = new FormGroup({
+    //   email: new FormControl("", Validators.required),
+    // });
   }
 
   get fc() {
@@ -50,14 +53,9 @@ export class LoginPageComponent implements OnInit {
 
     this.authService
       .login(this.form.value.email, this.form.value.password)
-      .subscribe(
-        (res) => {
-          this.form.reset();
-          this.router.navigate(["/admin", "dashboard"]);
-        },
-        () => {
-          this.submitted = false;
-        }
-      );
+      .subscribe(() => {
+        this.form.reset();
+        this.router.navigate(["/admin"]);
+      });
   }
 }

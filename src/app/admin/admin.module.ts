@@ -2,15 +2,18 @@ import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { RouterModule } from "@angular/router";
 import { AdminLayoutComponent } from "./shared/admin-layout/admin-layout.component";
-import { EditPageComponent } from "./edit-page/edit-page.component";
 import { OrdersPageComponent } from "./orders-page/orders-page.component";
-import { DashboardPageComponent } from "./dashboard-page/dashboard-page.component";
-import { AddPageComponent } from "./add-page/add-page.component";
+import { ProductsPageComponent } from "./products/product-list/product-list.component";
+import { ProductFormComponent } from "./products/product-form/product-form.component";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { AuthGuard } from "../shared/auth.guard";
 import { QuillModule } from "ngx-quill";
 import { SearchPipe } from "../shared/search.pipe";
-import { AuthorizedDirective } from "../shared/authorized.directive";
+import { AuthDirective } from "../shared/auth.directive";
+import { UsersPageComponent } from "./users/user-list/user-list.component";
+import { UserFormComponent } from "./users/user-form/user-form.component";
+import { RoleTypeEnum } from "../shared/roleTypeEnum";
+import { RoleGuard } from "../shared/role.guard";
 
 @NgModule({
   imports: [
@@ -26,38 +29,63 @@ import { AuthorizedDirective } from "../shared/authorized.directive";
         children: [
           {
             path: "",
-            redirectTo: "dashboard",
+            redirectTo: "users",
             pathMatch: "full",
           },
           {
-            path: "dashboard",
-            component: DashboardPageComponent,
+            path: "users",
+            component: UsersPageComponent,
+            canActivate: [RoleGuard],
+            data: {
+              roles: [RoleTypeEnum.ADMIN, RoleTypeEnum.SUPER_ADMIN],
+            },
           },
           {
-            path: "add",
-            component: AddPageComponent,
+            path: "users/add",
+            component: UserFormComponent,
+            canActivate: [RoleGuard],
+            data: {
+              roles: [RoleTypeEnum.SUPER_ADMIN],
+            },
+          },
+          {
+            path: "users/edit/:id",
+            component: UserFormComponent,
+            canActivate: [RoleGuard],
+            data: {
+              roles: [RoleTypeEnum.SUPER_ADMIN],
+            },
+          },
+          {
+            path: "products",
+            component: ProductsPageComponent,
+          },
+          {
+            path: "products/add",
+            component: ProductFormComponent,
+          },
+          {
+            path: "products/edit/:id",
+            component: ProductFormComponent,
           },
           {
             path: "orders",
             component: OrdersPageComponent,
           },
-          {
-            path: "product/:id/edit",
-            component: EditPageComponent,
-          },
         ],
       },
     ]),
     SearchPipe,
-    AuthorizedDirective,
+    AuthDirective,
   ],
   exports: [RouterModule],
   declarations: [
     AdminLayoutComponent,
-    DashboardPageComponent,
-    AddPageComponent,
-    EditPageComponent,
+    ProductsPageComponent,
+    ProductFormComponent,
     OrdersPageComponent,
+    UsersPageComponent,
+    UserFormComponent,
   ],
 })
 export class AdminModule {}

@@ -5,7 +5,6 @@ import { MainPageComponent } from "./main-page/main-page.component";
 import { ProductPageComponent } from "./product-page/product-page.component";
 import { OrderPageComponent } from "./order-page/order-page.component";
 import { LoginPageComponent } from "./login-page/login-page.component";
-import { AdminLayoutComponent } from "./admin/shared/admin-layout/admin-layout.component";
 
 const routes: Routes = [
   {
@@ -32,13 +31,7 @@ const routes: Routes = [
   },
   {
     path: "login",
-    component: AdminLayoutComponent,
-    children: [
-      {
-        path: "",
-        component: LoginPageComponent,
-      },
-    ],
+    component: LoginPageComponent,
   },
   {
     path: "admin",

@@ -28,5 +28,19 @@ export interface FirebaseResponse {
 export interface User {
   name: string;
   email: string;
+  role: RoleTypeEnum;
+  idKey?: string;
+}
+
+export interface Role {
+  name?: string;
+  email?: string;
   role?: RoleTypeEnum;
+  canBeDeleted?: boolean;
+}
+
+export interface StorageData {
+  accessToken: string;
+  expirationTime: string;
+  role: string;
 }

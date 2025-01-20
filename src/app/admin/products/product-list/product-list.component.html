@@ -1,11 +1,20 @@
 <div *ngIf="products.length; else loading">
-  <h2 class="text-center">Dashboard of products</h2>
+  <h2 class="text-center">List of products</h2>
   <div class="form-control">
     <input
       type="text"
       placeholder="Find a product..."
       [(ngModel)]="productName"
     />
+  </div>
+
+  <div class="mb-10">
+    <button
+      class="btn btn-success btn-full"
+      [routerLink]="['/admin', 'products', 'add']"
+    >
+      Add
+    </button>
   </div>
 
   <table>
@@ -31,9 +40,9 @@
         <td>
           <button
             class="btn btn-dark"
-            [routerLink]="['/admin', 'product', product.id, 'edit']"
+            [routerLink]="['/admin', 'products', 'edit', product.id]"
           >
-            Open
+            Edit
           </button>
         </td>
         <td>

@@ -1,0 +1,58 @@
+<div *ngIf="users.length; else loading">
+  <h2 class="text-center">List of Admins</h2>
+
+  <div *appAuthorized="[userRoleType.SUPER_ADMIN]" class="mb-10">
+    <button
+      class="btn btn-success btn-full"
+      [routerLink]="['/admin', 'users', 'add']"
+    >
+      Add
+    </button>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th *appAuthorized="[userRoleType.SUPER_ADMIN]">Id</th>
+        <th>Name</th>
+        <th>Role</th>
+        <th>Email</th>
+        <th *appAuthorized="[userRoleType.SUPER_ADMIN]">Open</th>
+        <th *appAuthorized="[userRoleType.SUPER_ADMIN]">Action</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr
+        *ngFor="let user of users; let idx = index"
+        [ngClass]="{ 'undeletable-user': !user.canBeDeleted }"
+      >
+        <td *appAuthorized="[userRoleType.SUPER_ADMIN]">{{ user.idKey }}</td>
+        <td>{{ user.name }}</td>
+        <td>{{ user.role }}</td>
+        <td>{{ user.email }}</td>
+        <td *appAuthorized="[userRoleType.SUPER_ADMIN]">
+          <button
+            class="btn btn-dark"
+            [disabled]="!user.canBeDeleted"
+            [routerLink]="['/admin', 'users', 'edit', user.idKey]"
+          >
+            Edit
+          </button>
+        </td>
+        <td *appAuthorized="[userRoleType.SUPER_ADMIN]">
+          <button
+            class="btn btn-danger"
+            [disabled]="!user.canBeDeleted"
+            (click)="deleteUser(user.idKey)"
+          >
+            Delete
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<ng-template #loading>
+  <p class="text-center">Loading...</p>
+</ng-template>

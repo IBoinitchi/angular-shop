@@ -1,0 +1,74 @@
+<div *ngIf="form; else loading">
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <h2 class="text-center">{{ isNew ? "Add" : "Edit" }} User</h2>
+
+    <div class="form-control">
+      <label for="user-name">User Name</label>
+      <input id="user-name" type="text" formControlName="name" />
+      <div
+        *ngIf="form.get('name').touched && form.get('name').invalid"
+        class="validation"
+      >
+        <small *ngIf="form.get('name').errors.required">Enter user name</small>
+      </div>
+    </div>
+
+    <div class="form-control">
+      <label for="user-email">User email</label>
+      <input id="user-email" type="email" formControlName="email" />
+      <div
+        *ngIf="form.get('email').touched && form.get('email').invalid"
+        class="validation"
+      >
+        <small *ngIf="form.get('email').errors.required">Enter Email</small>
+        <small *ngIf="form.get('email').errors.email">Enter valid Email</small>
+      </div>
+    </div>
+
+    <div class="form-control">
+      <label for="user-role">Role</label>
+      <select id="user-role" formControlName="role">
+        <option value="{{ userRoleType.SUPER_ADMIN }}">Super Admin</option>
+        <option value="{{ userRoleType.ADMIN }}">Admin</option>
+        <option value="{{ userRoleType.MODERATOR }}">Moderator</option>
+      </select>
+      <div
+        *ngIf="form.get('role').touched && form.get('role').invalid"
+        class="validation"
+      >
+        <small *ngIf="form.get('role').errors.required">Chose user role</small>
+      </div>
+    </div>
+
+    <div class="form-control">
+      <label for="user-password">User password</label>
+      <input id="user-password" type="password" formControlName="password" />
+      <div
+        *ngIf="form.get('password').touched && form.get('password').invalid"
+        class="validation"
+      >
+        <small *ngIf="form.get('password').errors.required"
+          >Enter Password</small
+        >
+        <small *ngIf="form.get('password').errors.minlength">
+          Password must be at least
+          {{ form.get("password").errors.minlength.requiredLength }} characters.
+          Now he
+          {{ form.get("password").errors.minlength.actualLength }}
+        </small>
+      </div>
+    </div>
+
+    <button
+      type="submit"
+      class="btn btn-success btn-block"
+      [disabled]="form.invalid || isSubmit"
+    >
+      Save
+    </button>
+  </form>
+</div>
+
+<ng-template #loading>
+  <p class="text-center">Loading...</p>
+</ng-template>

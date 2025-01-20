@@ -1,6 +1,7 @@
 import { Component } from "@angular/core";
 import { Router } from "@angular/router";
 import { AuthService } from "src/app/shared/auth.service";
+import { RoleTypeEnum } from "src/app/shared/roleTypeEnum";
 
 @Component({
   selector: "app-admin-layout",
@@ -9,6 +10,7 @@ import { AuthService } from "src/app/shared/auth.service";
 })
 export class AdminLayoutComponent {
   constructor(private authService: AuthService, private router: Router) {}
+  userRoleType = RoleTypeEnum;
 
   logout($event) {
     $event.preventDefault();

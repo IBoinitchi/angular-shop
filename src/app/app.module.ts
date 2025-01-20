@@ -14,11 +14,12 @@ import { ProductComponent } from "./shared/product/product.component";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ServiceWorkerModule } from "@angular/service-worker";
 import { LoginPageComponent } from "./login-page/login-page.component";
-import { AuthorizedDirective } from "./shared/authorized.directive";
+import { AuthDirective } from "./shared/auth.directive";
+
 import { environment } from "src/environments/environment";
-import { AngularFireModule } from "@angular/fire/compat";
-import { AngularFireAuthModule } from "@angular/fire/compat/auth";
-import { AngularFireDatabaseModule } from "@angular/fire/compat/database";
+import { provideFirebaseApp, initializeApp } from "@angular/fire/app";
+import { provideAuth, getAuth } from "@angular/fire/auth";
+import { provideDatabase, getDatabase } from "@angular/fire/database";
 
 @NgModule({
   declarations: [
@@ -43,12 +44,12 @@ import { AngularFireDatabaseModule } from "@angular/fire/compat/database";
       registrationStrategy: "registerWhenStable:30000",
     }),
     ProductComponent,
-    AuthorizedDirective,
-    AngularFireModule.initializeApp(environment.firebaseConfig),
-    AngularFireAuthModule,
-    AngularFireDatabaseModule,
+    AuthDirective,
   ],
   providers: [
+    provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
+    provideAuth(() => getAuth()),
+    provideDatabase(() => getDatabase()),
     {
       provide: HTTP_INTERCEPTORS,
       multi: true,
