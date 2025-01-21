@@ -1,15 +1,15 @@
 <div *ngIf="form; else loading">
   <form [formGroup]="form" (ngSubmit)="submit()">
     <h2 class="text-center">
-      {{ isNew ? "Add" : "Edit" }} Product: {{ form.get("title").value }}
+      {{ !!product.id ? "Edit" : "Add" }} Product: {{ form.get("title").value }}
     </h2>
 
     <div class="form-control">
       <label for="type">Type</label>
       <select formControlName="type">
-        <option value="Phone">Phone</option>
-        <option value="Tablet">Tablet</option>
-        <option value="Laptop">Laptop</option>
+        <option value="{{ productType.PHONE }}">Phone</option>
+        <option value="{{ productType.TABLET }}">Tablet</option>
+        <option value="{{ productType.LAPTOP }}">Laptop</option>
       </select>
       <div
         *ngIf="form.get('type').touched && form.get('type').invalid"

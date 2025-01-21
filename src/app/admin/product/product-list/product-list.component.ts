@@ -14,14 +14,13 @@ export class ProductListComponent implements OnInit {
   constructor(private productService: ProductService) {}
 
   ngOnInit() {
-    this.productService.productType = "ALL";
-    this.productService.getAllProducts().subscribe((products) => {
+    this.productService.getAllData().subscribe((products) => {
       this.products = products;
     });
   }
 
   delete(productId: string) {
-    this.productService.deleteProduct(productId).subscribe(() => {
+    this.productService.delete(productId).subscribe(() => {
       this.products = this.products.filter(
         (product) => product.id !== productId
       );

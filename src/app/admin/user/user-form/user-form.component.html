@@ -1,6 +1,6 @@
 <div *ngIf="form; else loading">
   <form [formGroup]="form" (ngSubmit)="submit()">
-    <h2 class="text-center">{{ isNew ? "Add" : "Edit" }} User</h2>
+    <h2 class="text-center">{{ !!user.id ? "Edit" : "Add" }} User</h2>
 
     <div class="form-control">
       <label for="user-name">User Name</label>

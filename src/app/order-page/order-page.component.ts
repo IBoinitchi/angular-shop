@@ -61,14 +61,14 @@ export class OrderPageComponent implements OnInit {
     this.isSubmit = true;
 
     this.orderService
-      .createOrder({
+      .create({
         name: this.form.value.name,
         phone: this.form.value.phone,
         address: this.form.value.address,
         payment: this.form.value.payment,
         products: this.orderProducts,
         price: this.totalPrice,
-        date: new Date(),
+        date: new Date().toDateString(),
       })
       .subscribe(() => {
         this.form.reset();

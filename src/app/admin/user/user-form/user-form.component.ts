@@ -13,8 +13,7 @@ import { User } from "src/app/shared/models/interfaces";
 export class UserFormComponent {
   form: FormGroup;
   isSubmit = false;
-  isNew = true;
-  user = null;
+  user = <User>{};
   userRoleType = RoleTypeEnum;
 
   constructor(
@@ -24,35 +23,42 @@ export class UserFormComponent {
   ) {}
 
   ngOnInit() {
-    const userIdKey = this.route.snapshot.params["id"];
-    if (userIdKey) {
-      this.loadUserData(userIdKey);
+    this.user.id = this.route.snapshot.params["id"];
+    if (this.user.id) {
+      this.loadUserData();
     } else {
       this.initializeForm();
     }
   }
 
-  private loadUserData(userIdKey: string) {
-    this.isNew = false;
+  private loadUserData() {
+    this.roleService.getOneById(this.user.id).subscribe((userData) => {
+      if (!userData.canBeDeleted) {
+        this.finalAction();
+      }
 
-    this.roleService.getRoleByUserId(userIdKey).then((userData) => {
-      this.user = userData;
-      this.initializeForm(this.user);
+      this.user = { ...this.user, ...userData };
+      this.initializeForm();
     });
   }
 
-  private initializeForm(user?: any) {
+  private initializeForm() {
     this.form = new FormGroup({
-      name: new FormControl(user?.name || "", Validators.required),
-      email: new FormControl(user?.email || "", [
+      name: new FormControl(this.user?.name || "", Validators.required),
+      email: new FormControl(this.user?.email || "", [
         Validators.required,
         Validators.email,
       ]),
-      role: new FormControl(user?.role || "", Validators.required),
-      password: new FormControl(user?.password || "", [
+      role: new FormControl(this.user?.role || "", Validators.required),
+      password: new FormControl(this.user?.password || "", [
         Validators.minLength(6),
       ]),
     });
+  }
+
+  private finalAction() {
+    this.isSubmit = false;
+    this.router.navigate(["/admin", "users"]);
   }
 
   submit() {
@@ -66,11 +72,10 @@ export class UserFormComponent {
       ...this.form.value,
     };
 
-    if (!this.isNew) {
-      this.roleService.updateUser(userData).then(() => {
-        this.isSubmit = false;
-        this.router.navigate(["/admin", "users"]);
-      });
+    if (!!this.user.id) {
+      this.roleService
+        .update(this.user.id, userData)
+        .subscribe(() => this.finalAction());
     }
   }
 }

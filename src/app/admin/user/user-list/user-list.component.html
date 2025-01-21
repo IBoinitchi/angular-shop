@@ -26,7 +26,7 @@
         *ngFor="let user of users; let idx = index"
         [ngClass]="{ 'undeletable-user': !user.canBeDeleted }"
       >
-        <td *appAuthorized="[userRoleType.SUPER_ADMIN]">{{ user.idKey }}</td>
+        <td *appAuthorized="[userRoleType.SUPER_ADMIN]">{{ user.id }}</td>
         <td>{{ user.name }}</td>
         <td>{{ user.role }}</td>
         <td>{{ user.email }}</td>
@@ -34,7 +34,7 @@
           <button
             class="btn btn-dark"
             [disabled]="!user.canBeDeleted"
-            [routerLink]="['/admin', 'users', 'edit', user.idKey]"
+            [routerLink]="['/admin', 'users', 'edit', user.id]"
           >
             Edit
           </button>
@@ -43,7 +43,7 @@
           <button
             class="btn btn-danger"
             [disabled]="!user.canBeDeleted"
-            (click)="deleteUser(user.idKey)"
+            (click)="deleteUser(user.id)"
           >
             Delete
           </button>

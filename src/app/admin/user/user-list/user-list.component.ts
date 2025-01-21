@@ -15,7 +15,7 @@ export class UserListComponent {
   constructor(private roleService: RoleService) {}
 
   ngOnInit() {
-    this.roleService.getUsersRoles().then((usersRoles) => {
+    this.roleService.getAllData().subscribe((usersRoles) => {
       this.users = usersRoles;
     });
   }

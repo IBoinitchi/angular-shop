@@ -29,7 +29,9 @@ export interface User {
   name: string;
   email: string;
   role: RoleTypeEnum;
-  idKey?: string;
+  canBeDeleted: RoleTypeEnum;
+  id?: string;
+  password?: string;
 }
 
 export interface Role {

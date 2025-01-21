@@ -1,4 +1,4 @@
-<div *ngIf="products | async as products; else loading" class="dashboard">
+<div *ngIf="products?.length; else loading" class="dashboard">
   <app-product
     *ngFor="let product of products"
     class="box"

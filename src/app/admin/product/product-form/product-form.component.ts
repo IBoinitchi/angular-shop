@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Product } from "src/app/shared/models/interfaces";
+import { ProductTypeEnum } from "src/app/shared/models/productTypeEnum";
 import { ProductService } from "src/app/shared/services/product.service";
 
 @Component({
@@ -12,8 +13,8 @@ import { ProductService } from "src/app/shared/services/product.service";
 export class ProductFormComponent implements OnInit {
   form: FormGroup;
   isSubmit = false;
-  isNew = true;
-  product: Product = null;
+  product: Product = {};
+  productType = ProductTypeEnum;
 
   constructor(
     private productService: ProductService,
@@ -22,34 +23,35 @@ export class ProductFormComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    const productIdKey = this.route.snapshot.params["id"];
-    if (productIdKey) {
-      this.loadProduct(productIdKey);
+    this.product.id = this.route.snapshot.params["id"];
+
+    if (this.product.id) {
+      this.loadProduct();
     } else {
       this.initializeForm();
     }
   }
 
-  private async loadProduct(productIdKey: string) {
-    this.isNew = false;
-    try {
-      this.product = await this.productService
-        .getProduct(productIdKey)
-        .toPromise();
-      this.initializeForm(this.product);
-    } catch (error) {
-      console.error("Error load data", error);
-    }
+  private loadProduct() {
+    this.productService.getOneById(this.product.id).subscribe((product) => {
+      this.product = { ...this.product, ...product };
+      this.initializeForm();
+    });
   }
 
-  private initializeForm(product?: Product) {
+  private initializeForm() {
     this.form = new FormGroup({
-      type: new FormControl(product?.type || "", Validators.required),
-      title: new FormControl(product?.title || "", Validators.required),
-      photo: new FormControl(product?.photo || "", Validators.required),
-      info: new FormControl(product?.info || "", Validators.required),
-      price: new FormControl(product?.price || "", Validators.required),
+      type: new FormControl(this.product?.type || "", Validators.required),
+      title: new FormControl(this.product?.title || "", Validators.required),
+      photo: new FormControl(this.product?.photo || "", Validators.required),
+      info: new FormControl(this.product?.info || "", Validators.required),
+      price: new FormControl(this.product?.price || "", Validators.required),
     });
+  }
+
+  private finalAction() {
+    this.isSubmit = false;
+    this.router.navigate(["/admin", "products"]);
   }
 
   submit() {
@@ -61,19 +63,17 @@ export class ProductFormComponent implements OnInit {
     const productData: Product = {
       ...this.product,
       ...this.form.value,
-      date: new Date(),
+      date: new Date().toDateString(),
     };
 
-    if (!this.isNew) {
-      this.productService.updateProduct(productData).subscribe(() => {
-        this.isSubmit = false;
-        this.router.navigate(["/admin", "products"]);
-      });
+    if (!!this.product.id) {
+      this.productService
+        .update(this.product.id, productData)
+        .subscribe(() => this.finalAction());
     } else {
-      this.productService.createProduct(productData).subscribe(() => {
-        this.isSubmit = false;
-        this.router.navigate(["/admin", "products"]);
-      });
+      this.productService
+        .create(productData)
+        .subscribe(() => this.finalAction());
     }
   }
 }

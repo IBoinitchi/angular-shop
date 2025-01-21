@@ -14,13 +14,13 @@ export class OrderListComponent implements OnInit {
   constructor(private orderService: OrderService) {}
 
   ngOnInit() {
-    this.orderService.getAllOrders().subscribe((orders) => {
-      this.orders = orders;
-    });
+    this.orderService
+      .getAllData()
+      .subscribe((orders) => (this.orders = orders));
   }
 
-  delete(orderId) {
-    this.orderService.deleteOrder(orderId).subscribe(() => {
+  delete(orderId: string) {
+    this.orderService.delete(orderId).subscribe(() => {
       this.orders = this.orders.filter((order) => order.id !== orderId);
     });
   }

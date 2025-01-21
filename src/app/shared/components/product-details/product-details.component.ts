@@ -18,7 +18,7 @@ export class ProductDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.product = this.productService.getProduct(
+    this.product = this.productService.getOneById(
       this.route.snapshot.params["id"]
     );
   }

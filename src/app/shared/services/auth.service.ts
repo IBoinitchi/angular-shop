@@ -46,19 +46,21 @@ export class AuthService implements OnDestroy {
       switchMap((userCredential) =>
         // https://www.learnrxjs.io/learn-rxjs/operators/combination/combinelatest
         combineLatest([
-          from(this.roleService.getRoleByUserId(userCredential.user.uid)),
+          this.roleService.getOneById(userCredential.user.uid),
           of(userCredential.user),
         ])
       ),
       tap(([userRole, userData]: [Role | null, any]) => {
         if (!userRole) {
           userRole = { role: this.defaultAdminRole };
-          this.roleService.createOrUpdateRoleByUid(userData.uid, {
-            email: userData.email,
-            role: userRole.role,
-            name: "New User",
-            canBeDeleted: true,
-          });
+          this.roleService
+            .createOrUpdateRoleByUid(userData.uid, {
+              email: userData.email,
+              role: userRole.role,
+              name: "New User",
+              canBeDeleted: true,
+            })
+            .subscribe();
         }
         const storageData: StorageData = {
           accessToken: userData.stsTokenManager.accessToken,

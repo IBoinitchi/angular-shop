@@ -12,9 +12,8 @@ export class MainLayoutComponent {
   constructor(private router: Router, private productService: ProductService) {}
 
   setProductPage(productType = "") {
-    if (productType! in ProductTypeEnum) {
+    if (productType.toLocaleUpperCase()! in ProductTypeEnum) {
       this.router.navigate(["/products", productType]);
-      this.productService.productType = productType;
     }
   }
 }
