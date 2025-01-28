@@ -44,5 +44,4 @@ export interface Role {
 export interface StorageData {
   accessToken: string;
   expirationTime: string;
-  role: string;
 }

@@ -1,10 +1,11 @@
 import { Injectable, OnDestroy, inject } from "@angular/core";
-import { combineLatest, from, Observable, of, Subject } from "rxjs";
+import { BehaviorSubject, combineLatest, from, Observable, of, Subject } from "rxjs";
 import { catchError, map, switchMap, takeUntil, tap } from "rxjs/operators";
 import { RoleTypeEnum } from "../models/roleTypeEnum";
-import { Auth, signInWithEmailAndPassword } from "@angular/fire/auth";
+import { Auth, signInWithEmailAndPassword, signOut, getIdToken } from "@angular/fire/auth";
 import { RoleService } from "./role.service";
 import { Role, StorageData } from "../models/interfaces";
+import { Functions, httpsCallable, connectFunctionsEmulator, getFunctions } from '@angular/fire/functions';
 
 @Injectable({
   providedIn: "root",
@@ -14,6 +15,10 @@ export class AuthService implements OnDestroy {
   private auth = inject(Auth);
   private roleService = inject(RoleService);
   private defaultAdminRole = RoleTypeEnum.MODERATOR;
+  private functions = inject(Functions);
+  private userRoleSubject = new BehaviorSubject<string | null>(null);
+
+  public userRole$ = this.userRoleSubject.asObservable();
 
   get token(): string | null {
     const expDate = new Date(localStorage.getItem("token-exp"));
@@ -24,8 +29,23 @@ export class AuthService implements OnDestroy {
     return localStorage.getItem("token");
   }
 
-  get role(): string {
-    return localStorage.getItem("role") || "";
+  constructor() {    
+    this.auth.onAuthStateChanged(async (currentUser: any) => {
+      const token = await currentUser?.getIdTokenResult();
+      const userRole = token?.claims?.role || this.defaultAdminRole;
+      this.userRoleSubject.next(userRole) 
+    })
+  }
+
+  updateUserRole(uid: string, role: string): Observable<any> {
+    // const callable: any = httpsCallable(this.functions, 'updateUserRole');
+    const emulator: any = connectFunctionsEmulator(this.functions, '127.0.0.1', 5001);
+    const callable: any = httpsCallable(getFunctions(emulator), 'updateUserRole');
+    console.log(callable);
+    if (callable) {
+      return callable({ uid, role });
+    }
+    return null;
   }
 
   private setStorageData(response: StorageData | null): void {
@@ -35,7 +55,6 @@ export class AuthService implements OnDestroy {
         new Date(response.expirationTime).toString()
       );
       localStorage.setItem("token", response.accessToken);
-      localStorage.setItem("role", response.role);
     } else {
       localStorage.clear();
     }
@@ -43,13 +62,14 @@ export class AuthService implements OnDestroy {
 
   login(email: string, password: string): Observable<any> {
     return from(signInWithEmailAndPassword(this.auth, email, password)).pipe(
-      switchMap((userCredential) =>
+      switchMap((userCredential) => {
+        // console.log(userCredential.user.getIdToken(true));
         // https://www.learnrxjs.io/learn-rxjs/operators/combination/combinelatest
-        combineLatest([
+        return combineLatest([
           this.roleService.getOneById(userCredential.user.uid),
           of(userCredential.user),
         ])
-      ),
+  	  }),
       tap(([userRole, userData]: [Role | null, any]) => {
         if (!userRole) {
           userRole = { role: this.defaultAdminRole };
@@ -59,13 +79,22 @@ export class AuthService implements OnDestroy {
               role: userRole.role,
               name: "New User",
               canBeDeleted: true,
-            })
-            .subscribe();
+            });
         }
+        
+        // const t = from(this.updateUserRole(userData.uid, RoleTypeEnum.SUPER_ADMIN))
+        // .pipe(
+        //   map(data=> {
+        //   console.log(data);
+        //   return from(userData.getIdToken(true));
+        // }));
+        // // userData.reload();
+        
+        // console.log(t);
+        
         const storageData: StorageData = {
           accessToken: userData.stsTokenManager.accessToken,
           expirationTime: userData.stsTokenManager.expirationTime,
-          role: userRole.role,
         };
 
         this.setStorageData(storageData);
@@ -80,6 +109,7 @@ export class AuthService implements OnDestroy {
 
   logout(): void {
     this.setStorageData(null);
+    signOut(this.auth);
   }
 
   isAuthenticated(): boolean {

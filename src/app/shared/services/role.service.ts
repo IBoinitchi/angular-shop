@@ -1,6 +1,5 @@
-import { Injectable, inject } from "@angular/core";
+import { Injectable } from "@angular/core";
 import {
-  Database,
   ref,
   get,
   orderByChild,
@@ -8,7 +7,7 @@ import {
   query,
   set,
 } from "@angular/fire/database";
-import { Role, User } from "../models/interfaces";
+import { Role } from "../models/interfaces";
 import { CrudService } from "./crud.service";
 
 @Injectable({
@@ -20,7 +19,7 @@ export class RoleService extends CrudService {
   async findRoleUserByEmail(email: string) {
     try {
       const userData = query(
-        ref(this.db, this.tableName),
+        this.createRef(this.tableName),
         orderByChild("email"),
         equalTo(email)
       );

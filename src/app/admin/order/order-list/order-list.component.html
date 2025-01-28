@@ -1,4 +1,4 @@
-<div *ngIf="orders.length; else noOrders">
+<div *ngIf="orders$ | async; else noOrders">
   <h2 class="text-center">Table of orders:</h2>
   <table>
     <thead>
@@ -14,7 +14,7 @@
     </thead>
 
     <tbody>
-      <tr *ngFor="let order of orders">
+      <tr *ngFor="let order of orders$ | async">
         <td>{{ order.date | date : "short" }}</td>
         <td>{{ order.phone }}</td>
         <td>{{ order.name }}</td>

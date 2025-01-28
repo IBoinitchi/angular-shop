@@ -17,8 +17,4 @@ export class AdminLayoutComponent {
     this.authService.logout();
     this.router.navigate(["/admin", "login"]);
   }
-
-  isAuthorized() {
-    return this.authService.isAuthenticated();
-  }
 }

@@ -10,7 +10,7 @@ import { ActivatedRoute } from "@angular/router";
   styleUrls: ["./main-page.component.scss"],
 })
 export class MainPageComponent implements OnInit {
-  products: Product[] = null;
+  products$: Observable<Product[]> = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -19,11 +19,8 @@ export class MainPageComponent implements OnInit {
 
   ngOnInit() {
     this.route.params.subscribe(({ productType }) => {
-      this.productService
-        .getProductsByType(productType)
-        .subscribe((products) => {
-          this.products = products;
-        });
+      this.products$ = this.productService
+        .getProductsByType(productType);
     });
   }
 }

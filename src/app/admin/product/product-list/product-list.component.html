@@ -1,4 +1,4 @@
-<div *ngIf="products.length; else loading">
+<div *ngIf="products$ | async; else loading">
   <h2 class="text-center">List of products</h2>
   <div class="form-control">
     <input
@@ -31,7 +31,10 @@
 
     <tbody>
       <tr
-        *ngFor="let product of products | search : productName; let idx = index"
+        *ngFor="
+          let product of products$ | async | search : productName;
+          let idx = index
+        "
       >
         <td>{{ product.id }}</td>
         <td>{{ product.title }}</td>

@@ -1,4 +1,6 @@
 import { Component, OnInit } from "@angular/core";
+import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
 import { Order } from "src/app/shared/models/interfaces";
 import { OrderService } from "src/app/shared/services/order.service";
 
@@ -8,20 +10,20 @@ import { OrderService } from "src/app/shared/services/order.service";
   styleUrls: ["./order-list.component.scss"],
 })
 export class OrderListComponent implements OnInit {
-  orders: Order[] = [];
+  orders$: Observable<Order[]> = null;
   orderName: string = "";
 
   constructor(private orderService: OrderService) {}
 
   ngOnInit() {
-    this.orderService
-      .getAllData()
-      .subscribe((orders) => (this.orders = orders));
+    this.orders$ = this.orderService.getAllData();
   }
 
   delete(orderId: string) {
     this.orderService.delete(orderId).subscribe(() => {
-      this.orders = this.orders.filter((order) => order.id !== orderId);
+      this.orders$ = this.orders$.pipe(
+        map((orders) => orders.filter((order) => order.id !== orderId))
+      );
     });
   }
 }

@@ -20,6 +20,7 @@ import { environment } from "src/environments/environment";
 import { provideFirebaseApp, initializeApp } from "@angular/fire/app";
 import { provideAuth, getAuth } from "@angular/fire/auth";
 import { provideDatabase, getDatabase } from "@angular/fire/database";
+import { provideFunctions, getFunctions } from '@angular/fire/functions';
 
 @NgModule({
   declarations: [
@@ -55,6 +56,7 @@ import { provideDatabase, getDatabase } from "@angular/fire/database";
       multi: true,
       useClass: AuthInterceptor,
     },
+	provideFunctions(() => getFunctions()),
   ],
   bootstrap: [AppComponent],
 })

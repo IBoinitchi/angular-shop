@@ -1,4 +1,5 @@
 import { Component } from "@angular/core";
+import { Observable } from "rxjs";
 import { User } from "src/app/shared/models/interfaces";
 import { RoleTypeEnum } from "src/app/shared/models/roleTypeEnum";
 import { RoleService } from "src/app/shared/services/role.service";
@@ -9,15 +10,13 @@ import { RoleService } from "src/app/shared/services/role.service";
   styleUrls: ["./user-list.component.scss"],
 })
 export class UserListComponent {
-  users: User[] = [];
+  users$: Observable<User[]> = null;
   userRoleType = RoleTypeEnum;
 
   constructor(private roleService: RoleService) {}
 
   ngOnInit() {
-    this.roleService.getAllData().subscribe((usersRoles) => {
-      this.users = usersRoles;
-    });
+    this.users$ = this.roleService.getAllData();
   }
 
   deleteUser(userIdKey: string) {}

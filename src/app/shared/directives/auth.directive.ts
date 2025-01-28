@@ -1,13 +1,34 @@
-import { Directive, Input, TemplateRef, ViewContainerRef } from "@angular/core";
+import { Directive, Input, TemplateRef, ViewContainerRef, OnDestroy } from "@angular/core";
 import { AuthService } from "../services/auth.service";
+import { Subscription } from "rxjs";
 
 @Directive({
   selector: "[appAuthorized]",
   standalone: true,
 })
-export class AuthDirective {
+export class AuthDirective implements OnDestroy {
   @Input() set appAuthorized(roles: string[]) {
-    if (!roles.includes(this.auth.role) && !roles.includes("*")) {
+    this.roles = roles;
+    this.updateView(); 
+  }
+
+  private roles: string[] = [];
+  private subscription: Subscription;
+  private currentRole: any = null;
+
+  constructor(
+    private auth: AuthService,
+    private templateRef: TemplateRef<any>,
+    private viewContainerRef: ViewContainerRef
+  ) {
+    this.subscription = this.auth.userRole$.subscribe((role) => {
+      this.currentRole = role;
+      this.updateView();
+    });
+  }
+
+  private updateView() {
+    if (!this.currentRole || (!this.roles.includes(this.currentRole) && !this.roles.includes("*"))) {
       this.viewContainerRef.clear();
       return;
     }
@@ -15,9 +36,7 @@ export class AuthDirective {
     this.viewContainerRef.createEmbeddedView(this.templateRef);
   }
 
-  constructor(
-    private auth: AuthService,
-    private templateRef: TemplateRef<any>,
-    private viewContainerRef: ViewContainerRef
-  ) {}
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
 }

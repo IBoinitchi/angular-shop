@@ -1,4 +1,6 @@
 import { Component, OnInit } from "@angular/core";
+import { Observable, of } from "rxjs";
+import { map, switchMap, tap } from "rxjs/operators";
 import { Product } from "src/app/shared/models/interfaces";
 import { ProductService } from "src/app/shared/services/product.service";
 
@@ -8,21 +10,21 @@ import { ProductService } from "src/app/shared/services/product.service";
   styleUrls: ["./product-list.component.scss"],
 })
 export class ProductListComponent implements OnInit {
-  products: Product[] = [];
+  products$: Observable<Product[]> = null;
   productName: string = "";
 
   constructor(private productService: ProductService) {}
 
   ngOnInit() {
-    this.productService.getAllData().subscribe((products) => {
-      this.products = products;
-    });
+    this.products$ = this.productService.getAllData();
   }
 
   delete(productId: string) {
     this.productService.delete(productId).subscribe(() => {
-      this.products = this.products.filter(
-        (product) => product.id !== productId
+      this.products$ = this.products$.pipe(
+        map((products) =>
+          products.filter((product) => product.id !== productId)
+        )
       );
     });
   }

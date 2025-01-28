@@ -25,7 +25,8 @@ async function createUserIfNotExists(admin) {
     } else {
       const createdUser = await createFirebaseAuthUser(
         admin.email,
-        admin.password
+        admin.password,
+		admin.role
       );
 
       const newUserRef = db.ref(`/users/${createdUser.uid}`);
@@ -45,12 +46,13 @@ async function createUserIfNotExists(admin) {
   }
 }
 
-async function createFirebaseAuthUser(email, password) {
+async function createFirebaseAuthUser(email, password, role) {
   try {
     const userRecord = await admin.auth().createUser({
       email: email,
       password: password,
     });
+	await admin.auth().setCustomUserClaims(userRecord.uid, { role });
     console.log(
       `User created in Authentication with email: ${userRecord.email}`
     );

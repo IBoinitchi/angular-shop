@@ -1,11 +1,10 @@
-<div *ngIf="products?.length; else loading" class="dashboard">
+<div *ngIf="products$ | async; else loading" class="dashboard">
   <app-product
-    *ngFor="let product of products"
+    *ngFor="let product of products$ | async"
     class="box"
     [product]="product"
   />
 </div>
-
 <ng-template #loading>
   <p class="text-center">Loading...</p>
 </ng-template>

@@ -5,7 +5,8 @@ import {
   UrlTree,
   Router,
 } from "@angular/router";
-import { Observable } from "rxjs";
+import { Observable, of } from "rxjs";
+import { catchError, map } from "rxjs/operators";
 import { AuthService } from "src/app/shared/services/auth.service";
 
 @Injectable({
@@ -22,13 +23,18 @@ export class RoleGuard {
     | Promise<boolean | UrlTree>
     | boolean
     | UrlTree {
-    const routeAccessRoles = next?.data?.roles;
-    const userRole = this.authService.role;
+	const routeAccessRoles = next?.data?.roles || [];
 
-    if (routeAccessRoles.length && routeAccessRoles.includes(userRole)) {
-      return true;
-    }
-
-    this.router.navigate(["/admin/products"]);
+	return this.authService.userRole$.pipe(
+      map((userRole) => {
+        if (routeAccessRoles.includes(userRole) || routeAccessRoles.includes("*")) {
+          return true;
+        }
+        return this.router.createUrlTree(["/admin/products"]);
+      }),
+      catchError(() => {
+        return of(this.router.createUrlTree(["/admin/products"]));
+      })
+	  );
   }
 }

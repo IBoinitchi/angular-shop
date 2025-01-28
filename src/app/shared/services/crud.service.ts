@@ -8,6 +8,7 @@ import {
   push,
   update,
   remove,
+  onValue,
 } from "@angular/fire/database";
 import { from, Observable, of } from "rxjs";
 import { catchError, map, switchMap, tap } from "rxjs/operators";
@@ -20,12 +21,12 @@ export abstract class CrudService<T = any> {
   protected tableName: string = null;
 
   // Helper function to create a reference
-  private createRef(path: string): any {
+  protected createRef(path: string): any {
     return ref(this.db, path);
   }
 
   // Helper function to check if data exists
-  private checkIfExists(refPath: string): Observable<boolean> {
+  protected checkIfExists(refPath: string): Observable<boolean> {
     return from(get(this.createRef(refPath))).pipe(
       map((snapshot) => snapshot.exists()),
       catchError((error) => {
@@ -50,40 +51,25 @@ export abstract class CrudService<T = any> {
   }
 
   getAllData(): Observable<T[]> {
-    return from(get(this.createRef(this.tableName))).pipe(
-      map((snapshot) => {
-        if (!snapshot.exists()) {
-          console.warn(`No data found in table ${this.tableName}`);
-          return [];
-        }
-        const allData = snapshot.val();
-        return Object.keys(allData).map((key) => ({
-          ...allData[key],
+    return new Observable((observer) => {
+      onValue(this.createRef(this.tableName), (snapshot) => {
+        const oldData = snapshot.val();
+        const newData = Object.keys(oldData).map((key) => ({
+          ...oldData[key],
           id: key,
         })) as T[];
-      }),
-      catchError((error) => {
-        console.error(
-          `Error fetching all data from table ${this.tableName}:`,
-          error
-        );
-        throw error;
-      })
-    );
+        return observer.next(newData);
+      });
+    });
   }
 
   getOneById(id: string): Observable<T | null> {
     const path = `/${this.tableName}/${id}`;
-    return from(get(this.createRef(path))).pipe(
-      map((snapshot) => (snapshot.exists() ? snapshot.val() : null)),
-      catchError((error) => {
-        console.error(
-          `Error fetching data by id from table ${this.tableName}:`,
-          error
-        );
-        throw error;
-      })
-    );
+    return new Observable((observer) => {
+      onValue(this.createRef(path), (snapshot) => {
+        return observer.next(snapshot.val());
+      });
+    });
   }
 
   update(id: string, data: Partial<T>): Observable<any> {
