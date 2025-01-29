@@ -1,8 +1,8 @@
 import { Injectable, OnDestroy, inject } from "@angular/core";
 import { BehaviorSubject, combineLatest, from, Observable, of, Subject } from "rxjs";
-import { catchError, map, switchMap, takeUntil, tap } from "rxjs/operators";
+import { catchError, switchMap, takeUntil, tap } from "rxjs/operators";
 import { RoleTypeEnum } from "../models/roleTypeEnum";
-import { Auth, signInWithEmailAndPassword, signOut, getIdToken } from "@angular/fire/auth";
+import { Auth, signInWithEmailAndPassword, signOut } from "@angular/fire/auth";
 import { RoleService } from "./role.service";
 import { Role, StorageData } from "../models/interfaces";
 import { Functions, httpsCallable, connectFunctionsEmulator, getFunctions } from '@angular/fire/functions';
@@ -18,8 +18,6 @@ export class AuthService implements OnDestroy {
   private functions = inject(Functions);
   private userRoleSubject = new BehaviorSubject<string | null>(null);
 
-  public userRole$ = this.userRoleSubject.asObservable();
-
   get token(): string | null {
     const expDate = new Date(localStorage.getItem("token-exp"));
     if (new Date() > expDate) {
@@ -29,12 +27,20 @@ export class AuthService implements OnDestroy {
     return localStorage.getItem("token");
   }
 
-  constructor() {    
-    this.auth.onAuthStateChanged(async (currentUser: any) => {
-      const token = await currentUser?.getIdTokenResult();
-      const userRole = token?.claims?.role || this.defaultAdminRole;
-      this.userRoleSubject.next(userRole) 
-    })
+  async loadUserRole(): Promise<void> {
+    const role = await this.getUserRoleFromFirebase();
+    this.userRoleSubject.next(role);
+  }
+
+  private async getUserRoleFromFirebase(): Promise<any> {
+    return this.auth.authStateReady().then(async() => {
+      const token = await this.auth.currentUser?.getIdTokenResult();
+      return token?.claims?.role || this.defaultAdminRole;
+    });
+  }
+
+  getUserRole(): Observable<string | null> {
+    return this.userRoleSubject.asObservable();
   }
 
   updateUserRole(uid: string, role: string): Observable<any> {

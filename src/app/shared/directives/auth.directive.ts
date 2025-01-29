@@ -21,14 +21,13 @@ export class AuthDirective implements OnDestroy {
     private templateRef: TemplateRef<any>,
     private viewContainerRef: ViewContainerRef
   ) {
-    this.subscription = this.auth.userRole$.subscribe((role) => {
+    this.subscription = this.auth.getUserRole().subscribe((role) => {
       this.currentRole = role;
-      this.updateView();
     });
   }
 
   private updateView() {
-    if (!this.currentRole || (!this.roles.includes(this.currentRole) && !this.roles.includes("*"))) {
+    if (!this.roles.includes(this.currentRole) && !this.roles.includes("*")) {
       this.viewContainerRef.clear();
       return;
     }

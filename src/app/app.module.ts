@@ -1,5 +1,5 @@
 import { BrowserModule } from "@angular/platform-browser";
-import { NgModule, isDevMode } from "@angular/core";
+import { APP_INITIALIZER, NgModule, isDevMode } from "@angular/core";
 
 import { AppRoutes } from "./app.routes";
 import { AppComponent } from "./app.component";
@@ -9,7 +9,6 @@ import { ProductDetailsComponent } from "./shared/components/product-details/pro
 import { OrderPageComponent } from "./order-page/order-page.component";
 import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
 import { QuillModule } from "ngx-quill";
-import { AuthInterceptor } from "./shared/interceptors/auth.interseptor";
 import { ProductComponent } from "./shared/components/product/product.component";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ServiceWorkerModule } from "@angular/service-worker";
@@ -17,10 +16,12 @@ import { LoginPageComponent } from "./login-page/login-page.component";
 import { AuthDirective } from "./shared/directives/auth.directive";
 
 import { environment } from "src/environments/environment";
-import { provideFirebaseApp, initializeApp } from "@angular/fire/app";
+import { provideFirebaseApp, initializeApp as initializeFirebaseApp } from "@angular/fire/app";
 import { provideAuth, getAuth } from "@angular/fire/auth";
 import { provideDatabase, getDatabase } from "@angular/fire/database";
 import { provideFunctions, getFunctions } from '@angular/fire/functions';
+import { AuthService } from "./shared/services/auth.service";
+import { initializeApp } from "./app.initializer";
 
 @NgModule({
   declarations: [
@@ -48,15 +49,17 @@ import { provideFunctions, getFunctions } from '@angular/fire/functions';
     AuthDirective,
   ],
   providers: [
-    provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
+	AuthService,
+    provideFirebaseApp(() => initializeFirebaseApp(environment.firebaseConfig)),
     provideAuth(() => getAuth()),
     provideDatabase(() => getDatabase()),
-    {
-      provide: HTTP_INTERCEPTORS,
-      multi: true,
-      useClass: AuthInterceptor,
-    },
 	provideFunctions(() => getFunctions()),
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeApp,
+      deps: [AuthService],
+      multi: true,
+    },
   ],
   bootstrap: [AppComponent],
 })

@@ -36,7 +36,6 @@ import { RoleGuard } from "../shared/guards/role.guard";
             path: "users",
             component: UserListComponent,
             canActivate: [RoleGuard],
-			resolve: {},
             data: {
               roles: [RoleTypeEnum.ADMIN, RoleTypeEnum.SUPER_ADMIN],
             },

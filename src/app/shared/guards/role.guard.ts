@@ -25,16 +25,13 @@ export class RoleGuard {
     | UrlTree {
 	const routeAccessRoles = next?.data?.roles || [];
 
-	return this.authService.userRole$.pipe(
-      map((userRole) => {
-        if (routeAccessRoles.includes(userRole) || routeAccessRoles.includes("*")) {
-          return true;
-        }
-        return this.router.createUrlTree(["/admin/products"]);
-      }),
-      catchError(() => {
-        return of(this.router.createUrlTree(["/admin/products"]));
-      })
-	  );
+	return this.authService.getUserRole().pipe(
+    map((userRole) => {
+      if (routeAccessRoles.includes(userRole) || routeAccessRoles.includes("*")) {
+        return true;
+      }
+      this.router.navigate(["/admin/products"]);
+      return false;
+    }));
   }
 }
