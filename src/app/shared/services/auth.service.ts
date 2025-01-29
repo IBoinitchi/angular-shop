@@ -104,6 +104,7 @@ export class AuthService implements OnDestroy {
         };
 
         this.setStorageData(storageData);
+        this.loadUserRole();
       }),
       catchError((error) => {
         console.error("Login error: ", error);
