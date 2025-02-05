@@ -9,7 +9,6 @@ admin.initializeApp({
   databaseURL: serviceAccount?.database_url,
 });
 
-
 async function createUserIfNotExists(adminData) {
   try {
 		const userRecord = await admin.auth().getUserByEmail(adminData.email).then(() => true).catch(() => false);
@@ -34,8 +33,10 @@ async function createFirebaseAuthUser(adminData) {
 			displayName: adminData.name,
       password: adminData.password,
     });
+
 		await admin.auth().setCustomUserClaims(userRecord.uid, { role: adminData.role, canBeDeleted: adminData.canBeDeleted });
-    console.log(
+    
+		console.log(
       `User created in Authentication with email: ${userRecord.email}`
     );
     return userRecord;

@@ -20,7 +20,7 @@ jobs:
       - name: Create production environment
         env:
           PROD_ENV_CONFIG: ${{ secrets.PROD_ENV_CONFIG }}
-        run: node create-prod-env.js
+        run: node ./.github/create-prod-env.js
 
       - name: Install dependencies
         run: npm install --save --legacy-peer-deps
@@ -28,7 +28,7 @@ jobs:
       - name: Create Super Admin
         env:
           SERVICE_ACCOUNT_KEY: ${{ secrets.SERVICE_ACCOUNT_KEY }}
-        run: node create-user.js
+        run: node ./.github/create-user.js
 
       - name: Build
         run: npm run build -- --configuration production
