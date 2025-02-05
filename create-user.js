@@ -29,7 +29,6 @@ async function createUserIfNotExists(adminData) {
 
 async function createFirebaseAuthUser(adminData) {
   try {		
-		console.log(adminData);
     const userRecord = await admin.auth().createUser({
       email: adminData.email,
 			displayName: adminData.name,
