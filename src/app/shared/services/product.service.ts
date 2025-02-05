@@ -8,11 +8,11 @@ import { equalTo, onValue, orderByChild, query } from "@angular/fire/database";
 @Injectable({
   providedIn: "root",
 })
-export class ProductService<T = any> extends CrudService {
+export class ProductService extends CrudService<Product> {
   tableName = "products";
   orderProducts: Product[] = [];
 
-  getProductsByType(productType: string | null): Observable<T[]> {
+  getProductsByType(productType: string | null): Observable<Product[]> {
     productType = productType || ProductTypeEnum.PHONE;
     const productQuery = query(
       this.createRef(this.tableName),
@@ -26,7 +26,7 @@ export class ProductService<T = any> extends CrudService {
         const newData = Object.keys(oldData).map((key) => ({
           ...oldData[key],
           id: key,
-        })) as T[];
+        })) as Product[];
         return observer.next(newData);
       });
     });

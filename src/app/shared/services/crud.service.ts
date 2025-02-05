@@ -16,7 +16,7 @@ import { catchError, map, switchMap, tap } from "rxjs/operators";
 @Injectable({
   providedIn: "root",
 })
-export abstract class CrudService<T = any> {
+export abstract class CrudService<T> {
   protected db = inject(Database);
   protected tableName: string = null;
 

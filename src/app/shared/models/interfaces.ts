@@ -18,7 +18,7 @@ export interface Order {
   address?: string;
   price?: number;
   products: Product[];
-  date?: Date;
+  date?: string;
 }
 
 export interface FirebaseResponse {
@@ -26,22 +26,16 @@ export interface FirebaseResponse {
 }
 
 export interface User {
-  name: string;
-  email: string;
-  role: RoleTypeEnum;
-  canBeDeleted: RoleTypeEnum;
-  id?: string;
-  password?: string;
-}
-
-export interface Role {
   name?: string;
   email?: string;
   role?: RoleTypeEnum;
   canBeDeleted?: boolean;
+  id?: string;
+  password?: string;
 }
 
 export interface StorageData {
   accessToken: string;
   expirationTime: string;
+  userName: string;
 }

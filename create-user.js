@@ -9,36 +9,17 @@ admin.initializeApp({
   databaseURL: serviceAccount?.database_url,
 });
 
-const db = admin.database();
-const adminData = serviceAccount.admin_data;
 
-async function createUserIfNotExists(admin) {
+async function createUserIfNotExists(adminData) {
   try {
-    const ref = db.ref("users");
-    const snapshot = await ref
-      .orderByChild("email")
-      .equalTo(admin.email)
-      .once("value");
-
-    if (snapshot.exists()) {
+		const userRecord = await admin.auth().getUserByEmail(adminData.email).then(() => true).catch(() => false);
+    if (userRecord) {
       console.log("User already exists.");
     } else {
-      const createdUser = await createFirebaseAuthUser(
-        admin.email,
-        admin.password,
-		admin.role
-      );
-
-      const newUserRef = db.ref(`/users/${createdUser.uid}`);
-      await newUserRef.set({
-        email: admin.email,
-        name: admin.name,
-        role: admin.role,
-        canBeDeleted: admin.canBeDeleted,
-      });
-
+      await createFirebaseAuthUser(adminData);
       console.log("User created successfully");
     }
+
     process.exit(0);
   } catch (error) {
     console.error("Error creating user:", error);
@@ -46,21 +27,22 @@ async function createUserIfNotExists(admin) {
   }
 }
 
-async function createFirebaseAuthUser(email, password, role) {
-  try {
+async function createFirebaseAuthUser(adminData) {
+  try {		
+		console.log(adminData);
     const userRecord = await admin.auth().createUser({
-      email: email,
-      password: password,
+      email: adminData.email,
+			displayName: adminData.name,
+      password: adminData.password,
     });
-	await admin.auth().setCustomUserClaims(userRecord.uid, { role });
+		await admin.auth().setCustomUserClaims(userRecord.uid, { role: adminData.role, canBeDeleted: adminData.canBeDeleted });
     console.log(
       `User created in Authentication with email: ${userRecord.email}`
     );
     return userRecord;
   } catch (error) {
     console.error("Error creating Firebase Authentication user:", error);
-    throw error;
   }
 }
 
-createUserIfNotExists(adminData);
+createUserIfNotExists(serviceAccount.admin_data);

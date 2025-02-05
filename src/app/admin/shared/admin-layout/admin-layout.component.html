@@ -1,7 +1,11 @@
 <nav class="navbar bg-dark">
-  <h1>
-    <a routerLink="/">Online Shop</a>
-  </h1>
+  <div class="dashboard-panel">
+		<h1>
+			<a routerLink="/">Online Shop</a>
+		</h1>
+		<div>Hi {{userName}}</div>
+  </div>
+
   <ul>
     <li
       *appAuthorized="[userRoleType.ADMIN, userRoleType.SUPER_ADMIN]"

@@ -9,7 +9,12 @@ import { RoleTypeEnum } from "src/app/shared/models/roleTypeEnum";
   styleUrls: ["./admin-layout.component.scss"],
 })
 export class AdminLayoutComponent {
-  constructor(private authService: AuthService, private router: Router) {}
+	userName: string;
+  
+  constructor(private authService: AuthService, private router: Router) {
+    this.userName = this.authService.userName;
+  }
+
   userRoleType = RoleTypeEnum;
 
   logout($event) {

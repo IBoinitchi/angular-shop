@@ -2,7 +2,7 @@ import { Component } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { RoleTypeEnum } from "src/app/shared/models/roleTypeEnum";
-import { RoleService } from "src/app/shared/services/role.service";
+import { UserService } from "src/app/shared/services/user.service";
 import { User } from "src/app/shared/models/interfaces";
 
 @Component({
@@ -19,7 +19,7 @@ export class UserFormComponent {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private roleService: RoleService
+    private userService: UserService
   ) {}
 
   ngOnInit() {
@@ -32,7 +32,9 @@ export class UserFormComponent {
   }
 
   private loadUserData() {
-    this.roleService.getOneById(this.user.id).subscribe((userData) => {
+    this.userService.getOneById(this.user.id).subscribe((userData) => {
+			console.log(userData);
+			
       if (!userData.canBeDeleted) {
         this.finalAction();
       }
@@ -73,9 +75,13 @@ export class UserFormComponent {
     };
 
     if (!!this.user.id) {
-      this.roleService
-        .update(this.user.id, userData)
+      this.userService
+        .updateUser(userData)
         .subscribe(() => this.finalAction());
-    }
+    } else {
+			this.userService
+				.createUser(userData)
+				.subscribe(() => this.finalAction());
+		}
   }
 }
