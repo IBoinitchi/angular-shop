@@ -3,7 +3,7 @@
 		<h1>
 			<a routerLink="/">Online Shop</a>
 		</h1>
-		<div>Hi {{userName}}</div>
+		<div>Hi {{ (currentUser$ | async)?.name }}</div>
   </div>
 
   <ul>

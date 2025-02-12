@@ -51,6 +51,7 @@ export abstract class CrudService<T> {
   }
 
   getAllData(): Observable<T[]> {
+    this.checkIfExists(this.tableName);
     return new Observable((observer) => {
       onValue(this.createRef(this.tableName), (snapshot) => {
         const oldData = snapshot.val();
@@ -65,6 +66,7 @@ export abstract class CrudService<T> {
 
   getOneById(id: string): Observable<T | null> {
     const path = `/${this.tableName}/${id}`;
+    this.checkIfExists(this.tableName);
     return new Observable((observer) => {
       onValue(this.createRef(path), (snapshot) => {
         return observer.next(snapshot.val());

@@ -1,96 +1,101 @@
-import { Injectable, OnDestroy, inject } from "@angular/core";
-import { BehaviorSubject, from, Observable, of, Subject } from "rxjs";
-import { catchError, switchMap, takeUntil } from "rxjs/operators";
+import { Injectable, inject } from "@angular/core";
+import { from, Observable, ReplaySubject, throwError } from "rxjs";
+import { catchError, map, switchMap } from "rxjs/operators";
 import { RoleTypeEnum } from "../models/roleTypeEnum";
-import { Auth, signInWithEmailAndPassword, signOut } from "@angular/fire/auth";
-import { StorageData } from "../models/interfaces";
+import {
+  Auth,
+  authState,
+  signInWithEmailAndPassword,
+  signOut,
+  User,
+  UserCredential,
+} from "@angular/fire/auth";
+import { AuthUser } from "../models/interfaces";
+import { ErrorService } from "./error.service";
 
 @Injectable({
   providedIn: "root",
 })
-export class AuthService implements OnDestroy {
-  private destroy$ = new Subject<void>();
-  private auth = inject(Auth);
+export class AuthService {
   private defaultAdminRole = RoleTypeEnum.MODERATOR;
-  private userRoleSubject = new BehaviorSubject<string | null>(null);
+  private auth = inject(Auth);
+  private errorService = inject(ErrorService);
 
-  get token(): string | null {
-    const expDate = new Date(localStorage.getItem("token-exp"));
-    if (new Date() > expDate) {
-      this.logout();
-      return null;
-    }
-    return localStorage.getItem("token");
+  private currentUserSubject = new ReplaySubject<AuthUser | null>(1);
+  public currentUser$ = this.currentUserSubject.asObservable();
+
+  constructor() {
+    this.initCurrentUser();
   }
 
-	get userName (): string| null {
-		return localStorage.getItem("user");
-	}
-
-  async loadUserRole(): Promise<void> {
-    const role = await this.getUserRoleFromFirebase();
-    this.userRoleSubject.next(role);
-  }
-
-	getUserRole(): Observable<string | null> {
-    return this.userRoleSubject.asObservable();
-  }
-
-  private async getUserRoleFromFirebase(): Promise<any> {
-    return this.auth.authStateReady().then(async() => {
-      const token = await this.auth.currentUser?.getIdTokenResult();
-      return token?.claims?.role || this.defaultAdminRole;
-    });
-  }
-
-  private setStorageData(response: StorageData | null): void {
-    if (response) {
-      localStorage.setItem(
-        "token-exp",
-        new Date(response.expirationTime).toString()
-      );
-      localStorage.setItem("token", response.accessToken);
-      localStorage.setItem("user", response.userName);
-    } else {
-      localStorage.clear();
-    }
-  }
-
-  login(email: string, password: string): Observable<any> {
-    return from(signInWithEmailAndPassword(this.auth, email, password)).pipe(
-			switchMap(async (userCredential) => {
-				const userToken = await userCredential.user.getIdTokenResult();
-				const role: any = userToken.claims?.role || this.defaultAdminRole;
-				
-				const storageData: StorageData = {
-          accessToken: userToken.token,
-          expirationTime: userToken.expirationTime,
-          userName: userCredential.user.displayName,
+  private setUserAuthorizationInfo(user: User): Observable<AuthUser> {
+    return from(user.getIdTokenResult()).pipe(
+      map((tokenInfo: any) => {
+        return {
+          id: user.uid,
+          name: user.displayName,
+          email: user.email,
+          role: tokenInfo.claims?.role || this.defaultAdminRole,
+          canBeDeleted: tokenInfo.claims?.canBeDeleted,
+          token: tokenInfo.token,
+          tokenExp: tokenInfo.expirationTime,
+          lastSignInTime: user.metadata.lastSignInTime,
         };
+      })
+    );
+  }
 
-        this.userRoleSubject.next(role);
-        this.setStorageData(storageData);
-				return userCredential;
-			}),
-      catchError((error) => {
-        console.error("Login error: ", error);
-        return of(null);
-      }),
-      takeUntil(this.destroy$)
+  private initCurrentUser(): void {
+    this.auth.onAuthStateChanged((user) => {
+      if (user === null) {
+        return this.currentUserSubject.next(user);
+      }
+
+      this.setUserAuthorizationInfo(user).subscribe({
+        next: (user: AuthUser) => {
+          this.currentUserSubject.next(user);
+        },
+        error: (error) => {
+          throw error;
+        },
+      });
+    });
+
+    // authState(this.auth)
+    //   .pipe(
+    //     // filter(Boolean),
+    //     switchMap((user: User) => {
+    //       console.log("initCurrentUser->switchMap", user);
+    //       return user ? this.setUserAuthorizationInfo(user) : [null];
+    //     })
+    //   )
+    //   .subscribe({
+    //     next: (user: AuthUser) => {
+    //       console.log("initCurrentUser->subscribe", user);
+
+    //       this.currentUserSubject.next(user);
+    //     },
+    //   });
+  }
+
+  login(email: string, password: string): Observable<AuthUser> {
+    return from(signInWithEmailAndPassword(this.auth, email, password)).pipe(
+      switchMap((userCredential: UserCredential) =>
+        this.setUserAuthorizationInfo(userCredential?.user)
+      )
     );
   }
 
   logout(): void {
-    this.setStorageData(null);
+    this.currentUserSubject.next(null);
     signOut(this.auth);
   }
 
-  isAuthenticated(): boolean {
-    return !!this.token;
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+  isAuthenticated(): Observable<boolean> {
+    return this.currentUser$.pipe(
+      map((user: AuthUser) => {
+        return user !== null && new Date() < new Date(user.tokenExp);
+      })
+    );
   }
 }

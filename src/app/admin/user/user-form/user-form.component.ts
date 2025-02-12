@@ -32,15 +32,15 @@ export class UserFormComponent {
   }
 
   private loadUserData() {
-    this.userService.getOneById(this.user.id).subscribe((userData) => {
-			console.log(userData);
-			
-      if (!userData.canBeDeleted) {
-        this.finalAction();
-      }
+    this.userService.getOneById(this.user.id).subscribe({
+      next: (userData) => {
+        if (!userData.canBeDeleted) {
+          this.finalAction();
+        }
 
-      this.user = { ...this.user, ...userData };
-      this.initializeForm();
+        this.user = { ...this.user, ...userData };
+        this.initializeForm();
+      },
     });
   }
 
@@ -75,13 +75,9 @@ export class UserFormComponent {
     };
 
     if (!!this.user.id) {
-      this.userService
-        .updateUser(userData)
-        .subscribe(() => this.finalAction());
+      this.userService.updateUser(userData).subscribe(() => this.finalAction());
     } else {
-			this.userService
-				.createUser(userData)
-				.subscribe(() => this.finalAction());
-		}
+      this.userService.createUser(userData).subscribe(() => this.finalAction());
+    }
   }
 }

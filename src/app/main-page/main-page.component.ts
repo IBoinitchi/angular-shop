@@ -19,8 +19,7 @@ export class MainPageComponent implements OnInit {
 
   ngOnInit() {
     this.route.params.subscribe(({ productType }) => {
-      this.products$ = this.productService
-        .getProductsByType(productType);
+      this.products$ = this.productService.getProductsByType(productType);
     });
   }
 }

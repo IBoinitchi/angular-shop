@@ -33,9 +33,11 @@ export class ProductFormComponent implements OnInit {
   }
 
   private loadProduct() {
-    this.productService.getOneById(this.product.id).subscribe((product) => {
-      this.product = { ...this.product, ...product };
-      this.initializeForm();
+    this.productService.getOneById(this.product.id).subscribe({
+      next: (product) => {
+        this.product = { ...this.product, ...product };
+        this.initializeForm();
+      },
     });
   }
 

@@ -34,8 +34,19 @@ export interface User {
   password?: string;
 }
 
+export interface AuthUser extends User {
+  token?: string;
+  tokenExp?: string;
+  lastSignInTime?: string;
+}
+
 export interface StorageData {
   accessToken: string;
   expirationTime: string;
   userName: string;
+}
+
+export interface ServerMessage {
+  isError: boolean;
+  message: string;
 }

@@ -13,7 +13,7 @@ export const environment = {
     appId: "APP_ID",
     databaseURL: "DATABASE_URL",
   },
-  useEmulators: true
+  useEmulators: true,
 };
 
 /*

@@ -1,7 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { Observable, of } from "rxjs";
-import { map, switchMap, tap } from "rxjs/operators";
+import { map } from "rxjs/operators";
 import { Product } from "src/app/shared/models/interfaces";
+import { AuthService } from "src/app/shared/services/auth.service";
 import { ProductService } from "src/app/shared/services/product.service";
 
 @Component({
@@ -13,7 +14,10 @@ export class ProductListComponent implements OnInit {
   products$: Observable<Product[]> = null;
   productName: string = "";
 
-  constructor(private productService: ProductService) {}
+  constructor(
+    private productService: ProductService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit() {
     this.products$ = this.productService.getAllData();

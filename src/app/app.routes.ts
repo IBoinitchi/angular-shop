@@ -5,6 +5,7 @@ import { MainPageComponent } from "./main-page/main-page.component";
 import { ProductDetailsComponent } from "./shared/components/product-details/product-details.component";
 import { OrderPageComponent } from "./order-page/order-page.component";
 import { LoginPageComponent } from "./login-page/login-page.component";
+import { LoginGuard } from "./shared/guards/login.guard";
 
 const routes: Routes = [
   {
@@ -32,6 +33,7 @@ const routes: Routes = [
   {
     path: "login",
     component: LoginPageComponent,
+    canActivate: [LoginGuard],
   },
   {
     path: "admin",

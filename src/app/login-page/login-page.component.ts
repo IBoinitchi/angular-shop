@@ -6,7 +6,11 @@ import {
   Validators,
 } from "@angular/forms";
 import { Router } from "@angular/router";
+import { finalize } from "rxjs/operators";
 import { AuthService } from "src/app/shared/services/auth.service";
+import { ServerMessage } from "src/app/shared/models/interfaces";
+import { AuthErrorCodes } from "firebase/auth";
+import { ToastrService } from "ngx-toastr";
 
 @Component({
   selector: "app-login-page",
@@ -27,17 +31,10 @@ export class LoginPageComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    if (this.authService.isAuthenticated()) {
-      this.router.navigate(["/admin"]);
-    }
-
     this.form = this.formBuilder.group({
       email: ["", [Validators.required, Validators.email]],
       password: ["", [Validators.required, Validators.minLength(6)]],
     });
-    // this.form = new FormGroup({
-    //   email: new FormControl("", Validators.required),
-    // });
   }
 
   get fc() {
@@ -53,9 +50,11 @@ export class LoginPageComponent implements OnInit {
 
     this.authService
       .login(this.form.value.email, this.form.value.password)
-      .subscribe(() => {
-        this.form.reset();
-        this.router.navigate(["/admin"]);
+      .pipe(finalize(() => (this.submitted = false)))
+      .subscribe({
+        next: () => {
+          this.router.navigate(["/admin"]);
+        },
       });
   }
 }

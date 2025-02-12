@@ -9,35 +9,35 @@ import { switchMap } from "rxjs/operators";
   providedIn: "root",
 })
 export class UserService extends CrudService<User> {
-  tableName = "users";
-	private functions = inject(Functions);
+  tableName = "";
+  private functions = inject(Functions);
 
-	getAllData(): Observable<any> {
-		const getAllFirebaseUsers = httpsCallable(this.functions, "getAllUsers");
-		return from(getAllFirebaseUsers()).pipe(
-			switchMap(({data}: any) => [data])
-		);
-	}
+  getAllData(): Observable<any> {
+    const getAllFirebaseUsers = httpsCallable(this.functions, "getAllUsers");
+    return from(getAllFirebaseUsers()).pipe(
+      switchMap(({ data }: any) => [data])
+    );
+  }
 
   getOneById(id: string): Observable<any> {
     const getFirebaseUser = httpsCallable(this.functions, "getUser");
-    return from(getFirebaseUser({id})).pipe(
-			switchMap(({data}: any) => [data])
-		);
+    return from(getFirebaseUser({ id })).pipe(
+      switchMap(({ data }: any) => [data])
+    );
   }
 
-	createUser(data: User): Observable<any> {
-		const createFirebaseUser = httpsCallable(this.functions, "createUser");
-		return from(createFirebaseUser(data));
-	}
+  createUser(data: User): Observable<any> {
+    const createFirebaseUser = httpsCallable(this.functions, "createUser");
+    return from(createFirebaseUser(data));
+  }
 
-	updateUser(data: User): Observable<any> {
-		const updateFirebaseUser = httpsCallable(this.functions, "updateUser");
-		return from(updateFirebaseUser(data));
-	}
+  updateUser(data: User): Observable<any> {
+    const updateFirebaseUser = httpsCallable(this.functions, "updateUser");
+    return from(updateFirebaseUser(data));
+  }
 
-	deleteUser(id: string): Observable<any> {
-		const deleteFirebaseUser = httpsCallable(this.functions, "deleteUser");
-		return from(deleteFirebaseUser({id}));
-	} 
+  deleteUser(id: string): Observable<any> {
+    const deleteFirebaseUser = httpsCallable(this.functions, "deleteUser");
+    return from(deleteFirebaseUser({ id }));
+  }
 }

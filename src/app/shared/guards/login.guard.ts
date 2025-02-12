@@ -8,12 +8,12 @@ import {
 } from "@angular/router";
 import { Observable } from "rxjs";
 import { AuthService } from "../services/auth.service";
-import { map } from "rxjs/operators";
+import { map, switchMap } from "rxjs/operators";
 
 @Injectable({
   providedIn: "root",
 })
-export class AuthGuard implements CanActivate {
+export class LoginGuard implements CanActivate {
   constructor(private authService: AuthService, private router: Router) {}
 
   canActivate(
@@ -27,10 +27,10 @@ export class AuthGuard implements CanActivate {
     return this.authService.isAuthenticated().pipe(
       map((status: any) => {
         if (status) {
-          return true;
-        } else {
-          this.router.navigate(["/login"]);
+          this.router.navigate(["/admin"]);
           return false;
+        } else {
+          return true;
         }
       })
     );
