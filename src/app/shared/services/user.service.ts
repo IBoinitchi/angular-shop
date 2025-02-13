@@ -1,5 +1,5 @@
 import { inject, Injectable } from "@angular/core";
-import { User } from "../models/interfaces";
+import { DisplayUser } from "../models/interfaces";
 import { CrudService } from "./crud.service";
 import { from, Observable } from "rxjs";
 import { Functions, httpsCallable } from "@angular/fire/functions";
@@ -8,30 +8,30 @@ import { switchMap } from "rxjs/operators";
 @Injectable({
   providedIn: "root",
 })
-export class UserService extends CrudService<User> {
+export class UserService extends CrudService<DisplayUser> {
   tableName = "";
   private functions = inject(Functions);
 
-  getAllData(): Observable<any> {
+  getAllData(): Observable<DisplayUser[]> {
     const getAllFirebaseUsers = httpsCallable(this.functions, "getAllUsers");
     return from(getAllFirebaseUsers()).pipe(
       switchMap(({ data }: any) => [data])
     );
   }
 
-  getOneById(id: string): Observable<any> {
+  getOneById(id: string): Observable<DisplayUser> {
     const getFirebaseUser = httpsCallable(this.functions, "getUser");
     return from(getFirebaseUser({ id })).pipe(
       switchMap(({ data }: any) => [data])
     );
   }
 
-  createUser(data: User): Observable<any> {
+  createUser(data: DisplayUser): Observable<any> {
     const createFirebaseUser = httpsCallable(this.functions, "createUser");
     return from(createFirebaseUser(data));
   }
 
-  updateUser(data: User): Observable<any> {
+  updateUser(data: DisplayUser): Observable<any> {
     const updateFirebaseUser = httpsCallable(this.functions, "updateUser");
     return from(updateFirebaseUser(data));
   }

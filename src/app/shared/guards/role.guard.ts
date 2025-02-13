@@ -8,7 +8,7 @@ import {
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { AuthService } from "src/app/shared/services/auth.service";
-import { User } from "../models/interfaces";
+import { AuthenticateUser } from "../models/interfaces";
 
 @Injectable({
   providedIn: "root",
@@ -27,8 +27,8 @@ export class RoleGuard {
     const routeAccessRoles = next?.data?.roles || [];
 
     return this.authService.currentUser$.pipe(
-      map((user: User) => {
-        const userRole = user?.role;
+      map((user: AuthenticateUser) => {
+        const userRole = user.role;
 
         if (
           routeAccessRoles.includes(userRole) ||

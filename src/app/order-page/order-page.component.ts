@@ -70,10 +70,12 @@ export class OrderPageComponent implements OnInit {
         price: this.totalPrice,
         date: new Date().toDateString(),
       })
-      .subscribe(() => {
-        this.form.reset();
-        this.added = "Delivery is framed";
-        this.isSubmit = false;
+      .subscribe({
+        next: () => {
+          this.form.reset();
+          this.added = "Delivery is framed";
+          this.isSubmit = false;
+        },
       });
   }
 

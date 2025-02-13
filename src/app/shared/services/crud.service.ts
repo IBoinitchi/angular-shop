@@ -11,7 +11,7 @@ import {
   onValue,
 } from "@angular/fire/database";
 import { from, Observable, of } from "rxjs";
-import { catchError, map, switchMap, tap } from "rxjs/operators";
+import { catchError, map, switchMap } from "rxjs/operators";
 
 @Injectable({
   providedIn: "root",
@@ -65,8 +65,9 @@ export abstract class CrudService<T> {
   }
 
   getOneById(id: string): Observable<T | null> {
-    const path = `/${this.tableName}/${id}`;
     this.checkIfExists(this.tableName);
+    const path = `/${this.tableName}/${id}`;
+
     return new Observable((observer) => {
       onValue(this.createRef(path), (snapshot) => {
         return observer.next(snapshot.val());
@@ -85,10 +86,6 @@ export abstract class CrudService<T> {
           return of();
         }
         return from(update(this.createRef(path), data));
-      }),
-      catchError((error) => {
-        console.error(`Error updating data in table ${this.tableName}:`, error);
-        throw error;
       })
     );
   }
@@ -101,16 +98,9 @@ export abstract class CrudService<T> {
           console.warn(
             `Record not found in table ${this.tableName} with id ${id}`
           );
-          return of();
+          return of(null);
         }
         return from(remove(this.createRef(path)));
-      }),
-      catchError((error) => {
-        console.error(
-          `Error deleting data from table ${this.tableName}:`,
-          error
-        );
-        throw error;
       })
     );
   }
@@ -118,11 +108,6 @@ export abstract class CrudService<T> {
   createOrUpdateById(id: string, data: Partial<T>): Observable<any> {
     const path = `/${this.tableName}/${id}`;
 
-    return from(set(this.createRef(path), data)).pipe(
-      catchError((error) => {
-        console.error(`Error creating data in table ${this.tableName}:`, error);
-        throw error;
-      })
-    );
+    return from(set(this.createRef(path), data));
   }
 }

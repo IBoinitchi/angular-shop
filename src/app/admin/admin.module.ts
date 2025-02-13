@@ -7,6 +7,7 @@ import { ProductListComponent } from "./product/product-list/product-list.compon
 import { ProductFormComponent } from "./product/product-form/product-form.component";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { AuthGuard } from "../shared/guards/auth.guard";
+import { QuillModule } from "ngx-quill";
 import { SearchPipe } from "../shared/pipes/search.pipe";
 import { AuthDirective } from "../shared/directives/auth.directive";
 import { UserListComponent } from "./user/user-list/user-list.component";
@@ -19,6 +20,7 @@ import { RoleGuard } from "../shared/guards/role.guard";
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    QuillModule.forRoot(),
     RouterModule.forChild([
       {
         path: "",

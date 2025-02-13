@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { RoleTypeEnum } from "src/app/shared/models/roleTypeEnum";
 import { UserService } from "src/app/shared/services/user.service";
-import { User } from "src/app/shared/models/interfaces";
+import { DisplayUser } from "src/app/shared/models/interfaces";
 
 @Component({
   selector: "app-user-form",
@@ -13,7 +13,7 @@ import { User } from "src/app/shared/models/interfaces";
 export class UserFormComponent {
   form: FormGroup;
   isSubmit = false;
-  user = <User>{};
+  user = <DisplayUser>{};
   userRoleType = RoleTypeEnum;
 
   constructor(
@@ -69,7 +69,7 @@ export class UserFormComponent {
     }
 
     this.isSubmit = true;
-    const userData: User = {
+    const userData: DisplayUser = {
       ...this.user,
       ...this.form.value,
     };

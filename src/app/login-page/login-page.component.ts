@@ -8,9 +8,6 @@ import {
 import { Router } from "@angular/router";
 import { finalize } from "rxjs/operators";
 import { AuthService } from "src/app/shared/services/auth.service";
-import { ServerMessage } from "src/app/shared/models/interfaces";
-import { AuthErrorCodes } from "firebase/auth";
-import { ToastrService } from "ngx-toastr";
 
 @Component({
   selector: "app-login-page",

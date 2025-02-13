@@ -12,7 +12,7 @@ import { RouterModule } from "@angular/router";
   imports: [QuillModule, RouterModule],
 })
 export class ProductComponent {
-  @Input() product: Product = {};
+  @Input() product: Product = <Product>{};
 
   constructor(private productService: ProductService) {}
 

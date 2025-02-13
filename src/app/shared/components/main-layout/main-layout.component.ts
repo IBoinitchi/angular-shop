@@ -1,6 +1,5 @@
 import { Component } from "@angular/core";
 import { Router } from "@angular/router";
-import { ProductService } from "../../services/product.service";
 import { ProductTypeEnum } from "../../models/productTypeEnum";
 
 @Component({
@@ -9,7 +8,7 @@ import { ProductTypeEnum } from "../../models/productTypeEnum";
   styleUrls: ["./main-layout.component.scss"],
 })
 export class MainLayoutComponent {
-  constructor(private router: Router, private productService: ProductService) {}
+  constructor(private router: Router) {}
 
   setProductPage(productType = "") {
     if (productType.toLocaleUpperCase()! in ProductTypeEnum) {

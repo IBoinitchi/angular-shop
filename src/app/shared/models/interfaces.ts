@@ -1,5 +1,20 @@
 import { RoleTypeEnum } from "./roleTypeEnum";
 
+export interface DisplayUser {
+  name?: string;
+  email?: string;
+  role?: RoleTypeEnum;
+  canBeDeleted?: boolean;
+  id?: string;
+  password?: string;
+}
+
+export interface AuthenticateUser extends DisplayUser {
+  token?: string;
+  tokenExp?: string;
+  lastSignInTime?: string;
+}
+
 export interface Product {
   id?: string;
   type?: string;
@@ -19,34 +34,4 @@ export interface Order {
   price?: number;
   products: Product[];
   date?: string;
-}
-
-export interface FirebaseResponse {
-  name: string;
-}
-
-export interface User {
-  name?: string;
-  email?: string;
-  role?: RoleTypeEnum;
-  canBeDeleted?: boolean;
-  id?: string;
-  password?: string;
-}
-
-export interface AuthUser extends User {
-  token?: string;
-  tokenExp?: string;
-  lastSignInTime?: string;
-}
-
-export interface StorageData {
-  accessToken: string;
-  expirationTime: string;
-  userName: string;
-}
-
-export interface ServerMessage {
-  isError: boolean;
-  message: string;
 }

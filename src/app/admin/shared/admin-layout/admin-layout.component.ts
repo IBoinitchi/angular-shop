@@ -2,7 +2,7 @@ import { Component } from "@angular/core";
 import { Router } from "@angular/router";
 import { AuthService } from "src/app/shared/services/auth.service";
 import { RoleTypeEnum } from "src/app/shared/models/roleTypeEnum";
-import { User } from "src/app/shared/models/interfaces";
+import { AuthenticateUser } from "src/app/shared/models/interfaces";
 import { Observable } from "rxjs";
 
 @Component({
@@ -11,7 +11,7 @@ import { Observable } from "rxjs";
   styleUrls: ["./admin-layout.component.scss"],
 })
 export class AdminLayoutComponent {
-  currentUser$: Observable<User> = null;
+  currentUser$: Observable<AuthenticateUser> = null;
   userRoleType = RoleTypeEnum;
 
   constructor(private authService: AuthService, private router: Router) {

@@ -13,7 +13,7 @@ import { ProductService } from "src/app/shared/services/product.service";
 export class ProductFormComponent implements OnInit {
   form: FormGroup;
   isSubmit = false;
-  product: Product = {};
+  product = <Product>{};
   productType = ProductTypeEnum;
 
   constructor(

@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
-import { User } from "src/app/shared/models/interfaces";
+import { DisplayUser } from "src/app/shared/models/interfaces";
 import { RoleTypeEnum } from "src/app/shared/models/roleTypeEnum";
 import { UserService } from "src/app/shared/services/user.service";
 
@@ -11,7 +11,7 @@ import { UserService } from "src/app/shared/services/user.service";
   styleUrls: ["./user-list.component.scss"],
 })
 export class UserListComponent {
-  users$: Observable<User[]> = null;
+  users$: Observable<DisplayUser[]> = null;
   userRoleType = RoleTypeEnum;
 
   constructor(private userService: UserService) {}
@@ -21,12 +21,12 @@ export class UserListComponent {
   }
 
   deleteUser(userId: string) {
-		this.userService.deleteUser(userId).subscribe(() => {
-			this.users$ = this.users$.pipe(
-				map((users: User[]) =>
-					users.filter((user) => user.id !== userId)
-				)
-			);
-		});
+    this.userService.deleteUser(userId).subscribe(() => {
+      this.users$ = this.users$.pipe(
+        map((users: DisplayUser[]) =>
+          users.filter((user) => user.id !== userId)
+        )
+      );
+    });
   }
 }

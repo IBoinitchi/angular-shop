@@ -24,7 +24,6 @@ import {
 import { QuillModule } from "ngx-quill";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { ToastrModule } from "ngx-toastr";
-import { ErrorService } from "./shared/services/error.service";
 import { GlobalErrorHandler } from "./shared/helper/global-error-handler";
 
 @NgModule({
@@ -74,7 +73,6 @@ import { GlobalErrorHandler } from "./shared/helper/global-error-handler";
       provide: ErrorHandler,
       useClass: GlobalErrorHandler,
     },
-    ErrorService,
   ],
   bootstrap: [AppComponent],
 })

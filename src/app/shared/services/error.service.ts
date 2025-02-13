@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Injectable, NgZone } from "@angular/core";
+import { Injectable, NgZone } from "@angular/core";
 import { AuthErrorCodes } from "@angular/fire/auth";
 import { ToastrService } from "ngx-toastr";
 

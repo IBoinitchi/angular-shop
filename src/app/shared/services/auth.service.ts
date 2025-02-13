@@ -1,17 +1,16 @@
 import { Injectable, inject } from "@angular/core";
-import { from, Observable, ReplaySubject, throwError } from "rxjs";
-import { catchError, map, switchMap } from "rxjs/operators";
+import { from, Observable, ReplaySubject } from "rxjs";
+import { map, switchMap } from "rxjs/operators";
 import { RoleTypeEnum } from "../models/roleTypeEnum";
 import {
   Auth,
-  authState,
+  IdTokenResult,
   signInWithEmailAndPassword,
   signOut,
   User,
   UserCredential,
 } from "@angular/fire/auth";
-import { AuthUser } from "../models/interfaces";
-import { ErrorService } from "./error.service";
+import { AuthenticateUser } from "../models/interfaces";
 
 @Injectable({
   providedIn: "root",
@@ -19,18 +18,17 @@ import { ErrorService } from "./error.service";
 export class AuthService {
   private defaultAdminRole = RoleTypeEnum.MODERATOR;
   private auth = inject(Auth);
-  private errorService = inject(ErrorService);
 
-  private currentUserSubject = new ReplaySubject<AuthUser | null>(1);
+  private currentUserSubject = new ReplaySubject<AuthenticateUser | null>(1);
   public currentUser$ = this.currentUserSubject.asObservable();
 
   constructor() {
     this.initCurrentUser();
   }
 
-  private setUserAuthorizationInfo(user: User): Observable<AuthUser> {
+  private setUserAuthorizationInfo(user: User): Observable<AuthenticateUser> {
     return from(user.getIdTokenResult()).pipe(
-      map((tokenInfo: any) => {
+      map((tokenInfo: IdTokenResult) => {
         return {
           id: user.uid,
           name: user.displayName,
@@ -46,42 +44,23 @@ export class AuthService {
   }
 
   private initCurrentUser(): void {
-    this.auth.onAuthStateChanged((user) => {
+    this.auth.onAuthStateChanged((user: User) => {
       if (user === null) {
-        return this.currentUserSubject.next(user);
+        return this.currentUserSubject.next(null);
       }
 
       this.setUserAuthorizationInfo(user).subscribe({
-        next: (user: AuthUser) => {
+        next: (user: AuthenticateUser) => {
           this.currentUserSubject.next(user);
-        },
-        error: (error) => {
-          throw error;
         },
       });
     });
-
-    // authState(this.auth)
-    //   .pipe(
-    //     // filter(Boolean),
-    //     switchMap((user: User) => {
-    //       console.log("initCurrentUser->switchMap", user);
-    //       return user ? this.setUserAuthorizationInfo(user) : [null];
-    //     })
-    //   )
-    //   .subscribe({
-    //     next: (user: AuthUser) => {
-    //       console.log("initCurrentUser->subscribe", user);
-
-    //       this.currentUserSubject.next(user);
-    //     },
-    //   });
   }
 
-  login(email: string, password: string): Observable<AuthUser> {
+  login(email: string, password: string): Observable<AuthenticateUser> {
     return from(signInWithEmailAndPassword(this.auth, email, password)).pipe(
       switchMap((userCredential: UserCredential) =>
-        this.setUserAuthorizationInfo(userCredential?.user)
+        this.setUserAuthorizationInfo(userCredential.user)
       )
     );
   }
@@ -93,7 +72,7 @@ export class AuthService {
 
   isAuthenticated(): Observable<boolean> {
     return this.currentUser$.pipe(
-      map((user: AuthUser) => {
+      map((user: AuthenticateUser) => {
         return user !== null && new Date() < new Date(user.tokenExp);
       })
     );

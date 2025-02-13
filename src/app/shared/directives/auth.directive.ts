@@ -7,7 +7,7 @@ import {
 } from "@angular/core";
 import { AuthService } from "../services/auth.service";
 import { Subscription } from "rxjs";
-import { User } from "../models/interfaces";
+import { AuthenticateUser } from "../models/interfaces";
 
 @Directive({
   selector: "[appAuthorized]",
@@ -29,12 +29,14 @@ export class AuthDirective implements OnDestroy {
   ) {}
 
   private updateView() {
-    this.subscription = this.auth.currentUser$.subscribe((user: User) => {
-      if (!this.roles.includes(user?.role) && !this.roles.includes("*")) {
-        this.viewContainerRef.clear();
-        return;
-      }
-      this.viewContainerRef.createEmbeddedView(this.templateRef);
+    this.subscription = this.auth.currentUser$.subscribe({
+      next: (user: AuthenticateUser) => {
+        if (!this.roles.includes(user.role) && !this.roles.includes("*")) {
+          this.viewContainerRef.clear();
+          return;
+        }
+        this.viewContainerRef.createEmbeddedView(this.templateRef);
+      },
     });
   }
 
