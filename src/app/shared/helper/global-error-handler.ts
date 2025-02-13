@@ -1,5 +1,6 @@
 import { ErrorService } from "../services/error.service";
 import { ErrorHandler, Injectable, Injector } from "@angular/core";
+import { environment } from "src/environments/environment";
 
 @Injectable()
 export class GlobalErrorHandler implements ErrorHandler {
@@ -15,6 +16,10 @@ export class GlobalErrorHandler implements ErrorHandler {
   }
 
   handleError(error: any): void {
+    if (!environment.production) {
+      console.error(error);
+    }
+
     if (typeof error === "function") {
       error = error();
     }

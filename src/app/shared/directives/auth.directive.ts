@@ -31,7 +31,7 @@ export class AuthDirective implements OnDestroy {
   private updateView() {
     this.subscription = this.auth.currentUser$.subscribe({
       next: (user: AuthenticateUser) => {
-        if (!this.roles.includes(user.role) && !this.roles.includes("*")) {
+        if (!this.roles.includes(user?.role) && !this.roles.includes("*")) {
           this.viewContainerRef.clear();
           return;
         }
