@@ -18,7 +18,7 @@ export class AdminLayoutComponent {
     this.currentUser$ = this.authService.currentUser$;
   }
 
-  logout($event) {
+  logout($event: Event): void {
     $event.preventDefault();
     this.authService.logout();
     this.router.navigate(["login"]);
