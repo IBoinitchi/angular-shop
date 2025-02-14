@@ -1,4 +1,4 @@
-<div *ngIf="form; else loading">
+@if(form) {
   <form [formGroup]="form" (ngSubmit)="submit()">
     <h2 class="text-center">{{ !!user.id ? "Edit" : "Add" }} User</h2>
 
@@ -67,8 +67,6 @@
       Save
     </button>
   </form>
-</div>
-
-<ng-template #loading>
-  <p class="text-center">Loading...</p>
-</ng-template>
+} @else {
+	<p class="text-center">Loading...</p>
+}

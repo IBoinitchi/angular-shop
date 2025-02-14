@@ -1,4 +1,4 @@
-<div *ngIf="orders$ | async; else noOrders">
+@if (orders$ | async) {
   <h2 class="text-center">Table of orders:</h2>
   <table>
     <thead>
@@ -34,8 +34,6 @@
       </tr>
     </tbody>
   </table>
-</div>
-
-<ng-template #noOrders>
-  <p class="text-center">No orders...</p>
-</ng-template>
+} @else {
+	<p class="text-center">No orders...</p>
+}

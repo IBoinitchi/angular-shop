@@ -1,4 +1,4 @@
-<div *ngIf="form; else loading">
+@if (form) {
   <form [formGroup]="form" (ngSubmit)="submit()">
     <h2 class="text-center">
       {{ !!product.id ? "Edit" : "Add" }} Product: {{ form.get("title").value }}
@@ -61,8 +61,6 @@
       Save
     </button>
   </form>
-</div>
-
-<ng-template #loading>
+} @else {
   <p class="text-center">Loading...</p>
-</ng-template>
+}

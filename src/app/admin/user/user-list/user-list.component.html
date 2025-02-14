@@ -1,4 +1,4 @@
-<div *ngIf="users$ | async; else loading">
+@if (users$ | async) {
   <h2 class="text-center">List of Admins</h2>
 
   <div *appAuthorized="[userRoleType.SUPER_ADMIN]" class="mb-10">
@@ -51,8 +51,6 @@
       </tr>
     </tbody>
   </table>
-</div>
-
-<ng-template #loading>
+} @else {
   <p class="text-center">Loading...</p>
-</ng-template>
+}

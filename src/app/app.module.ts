@@ -56,6 +56,12 @@ import { GlobalErrorHandler } from "./shared/helper/global-error-handler";
     }),
     ProductComponent,
     AuthDirective,
+  ],
+  providers: [
+    {
+      provide: ErrorHandler,
+      useClass: GlobalErrorHandler,
+    },
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
     provideAuth(() => getAuth()),
     provideDatabase(() => getDatabase()),
@@ -67,12 +73,6 @@ import { GlobalErrorHandler } from "./shared/helper/global-error-handler";
       }
       return functions;
     }),
-  ],
-  providers: [
-    {
-      provide: ErrorHandler,
-      useClass: GlobalErrorHandler,
-    },
   ],
   bootstrap: [AppComponent],
 })

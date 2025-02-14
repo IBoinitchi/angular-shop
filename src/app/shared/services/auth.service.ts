@@ -29,12 +29,16 @@ export class AuthService {
   private setUserAuthorizationInfo(user: User): Observable<AuthenticateUser> {
     return from(user.getIdTokenResult()).pipe(
       map((tokenInfo: IdTokenResult) => {
+        const role = (tokenInfo.claims?.role ||
+          this.defaultAdminRole) as RoleTypeEnum;
+        const canBeDeleted = tokenInfo.claims?.canBeDeleted as boolean;
+
         return {
           id: user.uid,
           name: user.displayName,
           email: user.email,
-          role: tokenInfo.claims?.role || this.defaultAdminRole,
-          canBeDeleted: tokenInfo.claims?.canBeDeleted,
+          role: RoleTypeEnum[role],
+          canBeDeleted: canBeDeleted,
           token: tokenInfo.token,
           tokenExp: tokenInfo.expirationTime,
           lastSignInTime: user.metadata.lastSignInTime,
