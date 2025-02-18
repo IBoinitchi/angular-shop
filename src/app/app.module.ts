@@ -6,7 +6,6 @@ import { MainLayoutComponent } from "./shared/components/main-layout/main-layout
 import { MainPageComponent } from "./main-page/main-page.component";
 import { ProductDetailsComponent } from "./shared/components/product-details/product-details.component";
 import { OrderPageComponent } from "./order-page/order-page.component";
-import { HttpClientModule } from "@angular/common/http";
 import { ProductComponent } from "./shared/components/product/product.component";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ServiceWorkerModule } from "@angular/service-worker";
@@ -44,7 +43,6 @@ import { GlobalErrorHandler } from "./shared/helper/global-error-handler";
     }),
     BrowserModule,
     AppRoutes,
-    HttpClientModule,
     QuillModule.forRoot(),
     FormsModule,
     ReactiveFormsModule,

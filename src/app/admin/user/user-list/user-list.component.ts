@@ -21,12 +21,14 @@ export class UserListComponent {
   }
 
   deleteUser(userId: string) {
-    this.userService.deleteUser(userId).subscribe(() => {
-      this.users$ = this.users$.pipe(
-        map((users: DisplayUser[]) =>
-          users.filter((user) => user.id !== userId)
-        )
-      );
+    this.userService.deleteUser(userId).subscribe({
+      next: () => {
+        this.users$ = this.users$.pipe(
+          map((users: DisplayUser[]) =>
+            users.filter((user) => user.id !== userId)
+          )
+        );
+      }
     });
   }
 }

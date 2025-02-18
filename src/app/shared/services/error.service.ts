@@ -29,7 +29,7 @@ export class ErrorService {
 
   private getFirebaseErrorMessage(code: string): string {
     const messages: { [key: string]: string } = {
-      "auth/invalid-login-credentials":
+      [AuthErrorCodes.INVALID_LOGIN_CREDENTIALS]:
         "Incorrect email address or password entered",
       [AuthErrorCodes.TOO_MANY_ATTEMPTS_TRY_LATER]:
         "Please try again later, too many requests have been sent.",

@@ -21,12 +21,14 @@ export class ProductListComponent implements OnInit {
   }
 
   delete(productId: string) {
-    this.productService.delete(productId).subscribe(() => {
-      this.products$ = this.products$.pipe(
-        map((products: Product[]) =>
-          products.filter((product) => product.id !== productId)
-        )
-      );
+    this.productService.delete(productId).subscribe({
+      next: () => {
+        this.products$ = this.products$.pipe(
+          map((products: Product[]) =>
+            products.filter((product) => product.id !== productId)
+          )
+        );
+      }
     });
   }
 }
