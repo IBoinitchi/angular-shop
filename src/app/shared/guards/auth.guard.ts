@@ -24,7 +24,7 @@ export class AuthGuard {
     | boolean
     | UrlTree {
     return this.authService.isAuthenticated().pipe(
-      map((status: any) => {
+      map((status: boolean) => {
         if (status) {
           return true;
         } else {

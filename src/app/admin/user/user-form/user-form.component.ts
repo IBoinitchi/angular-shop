@@ -33,7 +33,7 @@ export class UserFormComponent {
 
   private loadUserData() {
     this.userService.getOneById(this.user.id).subscribe({
-      next: (userData) => {
+      next: (userData: DisplayUser) => {
         if (!userData.canBeDeleted) {
           this.finalAction();
         }

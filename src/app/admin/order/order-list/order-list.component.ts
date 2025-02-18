@@ -22,7 +22,7 @@ export class OrderListComponent implements OnInit {
   delete(orderId: string) {
     this.orderService.delete(orderId).subscribe(() => {
       this.orders$ = this.orders$.pipe(
-        map((orders) => orders.filter((order) => order.id !== orderId))
+        map((orders: Order[]) => orders.filter((order) => order.id !== orderId))
       );
     });
   }

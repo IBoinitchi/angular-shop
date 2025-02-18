@@ -24,7 +24,7 @@ export class LoginGuard {
     | boolean
     | UrlTree {
     return this.authService.isAuthenticated().pipe(
-      map((status: any) => {
+      map((status: boolean) => {
         if (status) {
           this.router.navigate(["/admin"]);
           return false;

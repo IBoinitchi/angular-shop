@@ -14,10 +14,7 @@ export class ProductListComponent implements OnInit {
   products$: Observable<Product[]> = null;
   productName: string = "";
 
-  constructor(
-    private productService: ProductService,
-    private authService: AuthService
-  ) {}
+  constructor(private productService: ProductService) {}
 
   ngOnInit() {
     this.products$ = this.productService.getAllData();
@@ -26,7 +23,7 @@ export class ProductListComponent implements OnInit {
   delete(productId: string) {
     this.productService.delete(productId).subscribe(() => {
       this.products$ = this.products$.pipe(
-        map((products) =>
+        map((products: Product[]) =>
           products.filter((product) => product.id !== productId)
         )
       );

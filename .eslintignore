@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.angular/
+.firebase/
+.github/
+.vscode/
+.e2e/
+.firebase_functions/
