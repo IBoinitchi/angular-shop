@@ -1,4 +1,4 @@
-name: Run CI/CD deploy
+name: Run CI/CD process
 
 on:
   push:
@@ -9,9 +9,10 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Use Node.js 22.13.1
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "22.13.1"
@@ -19,32 +20,96 @@ jobs:
       - name: Create production environment
         env:
           PROD_ENV_CONFIG: ${{ secrets.PROD_ENV_CONFIG }}
-        run: node ./.github/create-prod-env.js
+        run: node ./.github/scripts/create-prod-env.js
+
+      - name: Cache node_modules
+        id: cache-node-modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            node-modules-${{ runner.os }}-
 
       - name: Install dependencies
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: npm ci
 
-  initApp:
+      - name: Save workspace
+        uses: actions/upload-artifact@v4
+        with:
+          name: workspace
+          path: |
+            package.json
+            package-lock.json
+            ngsw-config.json
+            angular.json
+            tsconfig.json
+            tsconfig.app.json
+            firebase.json
+            src/
+            .github/scripts/
+
+  create-user:
     needs: setup
     runs-on: ubuntu-latest
     steps:
+      - name: Download workspace
+        uses: actions/download-artifact@v4
+        with:
+          name: workspace
+          path: .
+
+      - name: Restore node_modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
       - name: Create Super Admin
         env:
           SERVICE_ACCOUNT_KEY: ${{ secrets.SERVICE_ACCOUNT_KEY }}
-        run: node ./.github/create-user.js
+        run: node ./.github/scripts/create-user.js
 
   build:
     needs: setup
     runs-on: ubuntu-latest
     steps:
+      - name: Download workspace
+        uses: actions/download-artifact@v4
+        with:
+          name: workspace
+          path: .
+
+      - name: Restore node_modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
       - name: Build
         run: npm run build -- --configuration production
+
+      - name: Save build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-output
+          path: |
+            dist/
+            firebase.json
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: FirebaseExtended/action-hosting-deploy@v0
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: build-output
+          path: .
+
+      - name: Deploy to Firebase
+        uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_AG404_2F02D }}

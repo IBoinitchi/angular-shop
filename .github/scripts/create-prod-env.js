@@ -1,4 +1,4 @@
-const fs = require("fs");
+import fs from "fs";
 
 const dir = "src/environments";
 const file = "environment.ts";

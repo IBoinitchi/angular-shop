@@ -14,12 +14,16 @@ export class UserService extends CrudService<DisplayUser> {
 
   getAllData(): Observable<DisplayUser[]> {
     const getAllFirebaseUsers = httpsCallable(this.functions, "getAllUsers");
-    return from(getAllFirebaseUsers()).pipe(switchMap(({ data }) => [data]));
+    return from(getAllFirebaseUsers()).pipe(
+      switchMap(({ data }: any) => [data])
+    );
   }
 
   getOneById(id: string): Observable<DisplayUser> {
     const getFirebaseUser = httpsCallable(this.functions, "getUser");
-    return from(getFirebaseUser({ id })).pipe(switchMap(({ data }) => [data]));
+    return from(getFirebaseUser({ id })).pipe(
+      switchMap(({ data }: any) => [data])
+    );
   }
 
   createUser(data: DisplayUser): Observable<any> {
