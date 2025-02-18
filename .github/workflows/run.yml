@@ -1,0 +1,52 @@
+name: Run CI/CD deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js 22.13.1
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.13.1"
+
+      - name: Create production environment
+        env:
+          PROD_ENV_CONFIG: ${{ secrets.PROD_ENV_CONFIG }}
+        run: node ./.github/create-prod-env.js
+
+      - name: Install dependencies
+        run: npm ci
+
+  initApp:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create Super Admin
+        env:
+          SERVICE_ACCOUNT_KEY: ${{ secrets.SERVICE_ACCOUNT_KEY }}
+        run: node ./.github/create-user.js
+
+  build:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build
+        run: npm run build -- --configuration production
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_AG404_2F02D }}
+          channelId: live
+          projectId: ag404-2f02d
