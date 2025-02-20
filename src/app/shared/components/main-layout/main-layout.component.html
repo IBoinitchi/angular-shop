@@ -2,13 +2,13 @@
   <h2>Online Shop</h2>
   <ul>
     <li routerLinkActive="active">
-      <a (click)="setProductPage('phone')">Phone</a>
+      <a href="#phone" (click)="setProductPage('phone', $event)">Phone</a>
     </li>
     <li routerLinkActive="active">
-      <a (click)="setProductPage('tablet')">Tablet</a>
+      <a href="#tablet" (click)="setProductPage('tablet', $event)">Tablet</a>
     </li>
     <li routerLinkActive="active">
-      <a (click)="setProductPage('laptop')">Laptop</a>
+      <a href="#laptop" (click)="setProductPage('laptop', $event)">Laptop</a>
     </li>
     <li routerLinkActive="active">
       <a routerLink="order">Order</a>

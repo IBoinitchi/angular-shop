@@ -24,7 +24,7 @@ export class AuthDirective implements OnDestroy {
 
   constructor(
     private auth: AuthService,
-    private templateRef: TemplateRef<any>,
+    private templateRef: TemplateRef<HTMLElement>,
     private viewContainerRef: ViewContainerRef
   ) {}
 

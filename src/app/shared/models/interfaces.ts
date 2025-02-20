@@ -35,3 +35,9 @@ export interface Order {
   products: Product[];
   date?: string;
 }
+
+export interface AppError {
+  code?: string;
+  message?: string;
+  [key: string]: string;
+}

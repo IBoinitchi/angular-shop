@@ -1,6 +1,7 @@
 import { ErrorService } from "../services/error.service";
 import { ErrorHandler, Injectable, Injector } from "@angular/core";
 import { environment } from "src/environments/environment";
+import { AppError } from "../models/interfaces";
 
 @Injectable()
 export class GlobalErrorHandler implements ErrorHandler {
@@ -15,7 +16,7 @@ export class GlobalErrorHandler implements ErrorHandler {
     return this.errorService;
   }
 
-  handleError(error: any): void {
+  handleError(error: AppError | (() => AppError)): void {
     if (!environment.production) {
       console.error(error);
     }
@@ -35,22 +36,22 @@ export class GlobalErrorHandler implements ErrorHandler {
     }
   }
 
-  private errorHandlers: { [key: string]: (error: any) => void } = {
+  private errorHandlers: { [key: string]: (error: AppError) => void } = {
     "auth/": (error) => this.handleFirebaseError(error),
     "permission-denied": (error) => this.handleFirebaseError(error),
     "functions/": (error) => this.handleHttpError(error),
-    default: (error) => this.handleGenericError(error),
+    default: () => this.handleGenericError(),
   };
 
-  private handleFirebaseError(error: any): void {
+  private handleFirebaseError(error: AppError): void {
     this.getErrorService().handleFirebaseError(error);
   }
 
-  private handleHttpError(error: any): void {
+  private handleHttpError(error: AppError): void {
     this.getErrorService().handleHttpError(error);
   }
 
-  private handleGenericError(error: any): void {
-    this.getErrorService().handleGenericError(error);
+  private handleGenericError(): void {
+    this.getErrorService().handleGenericError();
   }
 }

@@ -1,10 +1,5 @@
 import { Injectable } from "@angular/core";
-import {
-  ActivatedRouteSnapshot,
-  RouterStateSnapshot,
-  UrlTree,
-  Router,
-} from "@angular/router";
+import { ActivatedRouteSnapshot, UrlTree, Router } from "@angular/router";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { AuthService } from "src/app/shared/services/auth.service";
@@ -17,8 +12,7 @@ export class RoleGuard {
   constructor(private authService: AuthService, private router: Router) {}
 
   canActivate(
-    next: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
+    next: ActivatedRouteSnapshot
   ):
     | Observable<boolean | UrlTree>
     | Promise<boolean | UrlTree>

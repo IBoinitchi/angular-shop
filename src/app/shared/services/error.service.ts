@@ -1,6 +1,7 @@
 import { Injectable, NgZone } from "@angular/core";
 import { AuthErrorCodes } from "@angular/fire/auth";
 import { ToastrService } from "ngx-toastr";
+import { AppError } from "../models/interfaces";
 
 @Injectable({
   providedIn: "root",
@@ -8,20 +9,20 @@ import { ToastrService } from "ngx-toastr";
 export class ErrorService {
   constructor(private toastr: ToastrService, private ngZone: NgZone) {}
 
-  handleFirebaseError(error: any, title: string = "Firebase"): void {
+  handleFirebaseError(error: AppError, title: string = "Firebase"): void {
     const message = this.getFirebaseErrorMessage(error.code);
     this.ngZone.run(() => {
       this.toastr.error(message, title);
     });
   }
 
-  handleHttpError(error: any): void {
+  handleHttpError(error: AppError): void {
     this.ngZone.run(() => {
       this.toastr.error(`HTTP: ${error.status} - ${error.message}`, "API");
     });
   }
 
-  handleGenericError(error: any): void {
+  handleGenericError(): void {
     this.ngZone.run(() => {
       this.toastr.error("Something is wrong, please try again later.", "Error");
     });

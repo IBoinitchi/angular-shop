@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { DisplayUser } from "src/app/shared/models/interfaces";
@@ -10,7 +10,7 @@ import { UserService } from "src/app/shared/services/user.service";
   templateUrl: "./user-list.component.html",
   styleUrls: ["./user-list.component.scss"],
 })
-export class UserListComponent {
+export class UserListComponent implements OnInit {
   users$: Observable<DisplayUser[]> = null;
   userRoleType = RoleTypeEnum;
 
@@ -28,7 +28,7 @@ export class UserListComponent {
             users.filter((user) => user.id !== userId)
           )
         );
-      }
+      },
     });
   }
 }

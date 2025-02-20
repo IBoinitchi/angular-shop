@@ -13,8 +13,8 @@ import { FormControl } from "@angular/forms";
 export class OrderPageComponent implements OnInit {
   orderProducts: Product[] = [];
   totalPrice: number = 0;
-  isSubmit: Boolean = false;
-  added: String = "";
+  isSubmit: boolean = false;
+  added: string = "";
   form = new FormGroup({
     name: new FormControl(null),
     phone: new FormControl(null),

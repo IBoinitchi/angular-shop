@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { RoleTypeEnum } from "src/app/shared/models/roleTypeEnum";
@@ -10,7 +10,7 @@ import { DisplayUser } from "src/app/shared/models/interfaces";
   templateUrl: "./user-form.component.html",
   styleUrls: ["./user-form.component.scss"],
 })
-export class UserFormComponent {
+export class UserFormComponent implements OnInit {
   form: FormGroup;
   isSubmit = false;
   user = <DisplayUser>{};
@@ -34,6 +34,8 @@ export class UserFormComponent {
   private loadUserData() {
     this.userService.getOneById(this.user.id).subscribe({
       next: (userData: DisplayUser) => {
+        console.log(userData);
+
         if (!userData.canBeDeleted) {
           this.finalAction();
         }
@@ -74,7 +76,7 @@ export class UserFormComponent {
       ...this.form.value,
     };
 
-    if (!!this.user.id) {
+    if (this.user.id) {
       this.userService.updateUser(userData).subscribe(() => this.finalAction());
     } else {
       this.userService.createUser(userData).subscribe(() => this.finalAction());

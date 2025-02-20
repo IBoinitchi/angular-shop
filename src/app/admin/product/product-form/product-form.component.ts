@@ -68,7 +68,7 @@ export class ProductFormComponent implements OnInit {
       date: new Date().toDateString(),
     };
 
-    if (!!this.product.id) {
+    if (this.product.id) {
       this.productService
         .update(this.product.id, productData)
         .subscribe(() => this.finalAction());

@@ -5,7 +5,7 @@ import { Product } from "../models/interfaces";
   standalone: true,
 })
 export class SearchPipe implements PipeTransform {
-  transform(products: Product[], productName: string = ""): any {
+  transform(products: Product[], productName: string = ""): Product[] {
     if (!productName.trim()) {
       return products;
     }

@@ -10,7 +10,8 @@ import { ProductTypeEnum } from "../../models/productTypeEnum";
 export class MainLayoutComponent {
   constructor(private router: Router) {}
 
-  setProductPage(productType = "") {
+  setProductPage(productType = "", $event: Event) {
+    $event.preventDefault();
     if (productType.toLocaleUpperCase()! in ProductTypeEnum) {
       this.router.navigate(["/products", productType]);
     }

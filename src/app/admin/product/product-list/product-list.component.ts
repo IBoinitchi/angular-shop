@@ -1,8 +1,7 @@
 import { Component, OnInit } from "@angular/core";
-import { Observable, of } from "rxjs";
+import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { Product } from "src/app/shared/models/interfaces";
-import { AuthService } from "src/app/shared/services/auth.service";
 import { ProductService } from "src/app/shared/services/product.service";
 
 @Component({
@@ -28,7 +27,7 @@ export class ProductListComponent implements OnInit {
             products.filter((product) => product.id !== productId)
           )
         );
-      }
+      },
     });
   }
 }

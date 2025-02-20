@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input } from "@angular/core";
 import { Product } from "../../models/interfaces";
 import { ProductService } from "../../services/product.service";
 import { QuillModule } from "ngx-quill";
