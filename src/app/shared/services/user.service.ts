@@ -1,8 +1,12 @@
 import { inject, Injectable } from "@angular/core";
 import { DisplayUser } from "../models/interfaces";
 import { CrudService } from "./crud.service";
-import { from, Observable } from "rxjs";
-import { Functions, httpsCallable } from "@angular/fire/functions";
+import { from, Observable, ObservedValueOf } from "rxjs";
+import {
+  Functions,
+  httpsCallable,
+  HttpsCallableResult,
+} from "@angular/fire/functions";
 import { switchMap } from "rxjs/operators";
 
 @Injectable({

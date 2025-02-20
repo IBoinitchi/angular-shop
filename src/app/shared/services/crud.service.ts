@@ -9,6 +9,7 @@ import {
   update,
   remove,
   onValue,
+  DatabaseReference,
 } from "@angular/fire/database";
 import { from, Observable, of } from "rxjs";
 import { catchError, map, switchMap } from "rxjs/operators";
@@ -21,7 +22,7 @@ export abstract class CrudService<T> {
   protected tableName: string = null;
 
   // Helper function to create a reference
-  protected createRef(path: string): any {
+  protected createRef(path: string): DatabaseReference {
     return ref(this.db, path);
   }
 
@@ -75,7 +76,7 @@ export abstract class CrudService<T> {
     });
   }
 
-  update(id: string, data: Partial<T>): Observable<any> {
+  update(id: string, data: Partial<T>): Observable<void | null> {
     const path = `/${this.tableName}/${id}`;
     return this.checkIfExists(path).pipe(
       switchMap((exists) => {
@@ -83,14 +84,14 @@ export abstract class CrudService<T> {
           console.warn(
             `Record not found in table ${this.tableName} with id ${id}`
           );
-          return of();
+          return of(null);
         }
         return from(update(this.createRef(path), data));
       })
     );
   }
 
-  delete(id: string): Observable<any> {
+  delete(id: string): Observable<void> {
     const path = `/${this.tableName}/${id}`;
     return this.checkIfExists(path).pipe(
       switchMap((exists) => {
@@ -105,7 +106,7 @@ export abstract class CrudService<T> {
     );
   }
 
-  createOrUpdateById(id: string, data: Partial<T>): Observable<any> {
+  createOrUpdateById(id: string, data: Partial<T>): Observable<void> {
     const path = `/${this.tableName}/${id}`;
 
     return from(set(this.createRef(path), data));

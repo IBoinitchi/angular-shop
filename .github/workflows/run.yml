@@ -1,4 +1,4 @@
-name: Run CI/CD process
+name: CI/CD Pipeline
 
 on:
   push:
