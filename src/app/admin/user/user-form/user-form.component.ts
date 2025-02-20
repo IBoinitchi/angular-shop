@@ -34,8 +34,6 @@ export class UserFormComponent implements OnInit {
   private loadUserData() {
     this.userService.getOneById(this.user.id).subscribe({
       next: (userData: DisplayUser) => {
-        console.log(userData);
-
         if (!userData.canBeDeleted) {
           this.finalAction();
         }
