@@ -36,17 +36,17 @@ export class UserService extends CrudService<DisplayUser> {
     );
   }
 
-  createUser(data: DisplayUser): Observable<unknown> {
+  createUser(data: DisplayUser): Observable<HttpsCallableResult> {
     const createFirebaseUser = httpsCallable(this.functions, "createUser");
     return from(createFirebaseUser(data));
   }
 
-  updateUser(data: DisplayUser): Observable<unknown> {
+  updateUser(data: DisplayUser): Observable<HttpsCallableResult> {
     const updateFirebaseUser = httpsCallable(this.functions, "updateUser");
     return from(updateFirebaseUser(data));
   }
 
-  deleteUser(id: string): Observable<unknown> {
+  deleteUser(id: string): Observable<HttpsCallableResult> {
     const deleteFirebaseUser = httpsCallable(this.functions, "deleteUser");
     return from(deleteFirebaseUser({ id }));
   }

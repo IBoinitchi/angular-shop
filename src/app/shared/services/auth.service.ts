@@ -31,6 +31,7 @@ export class AuthService {
       map((tokenInfo: IdTokenResult) => {
         const role = (tokenInfo.claims?.role ||
           this.defaultAdminRole) as RoleTypeEnum;
+
         const canBeDeleted = tokenInfo.claims?.canBeDeleted as boolean;
 
         return {
